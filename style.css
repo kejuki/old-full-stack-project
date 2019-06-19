@@ -1,0 +1,73 @@
+body{
+  background: black;
+  margin:0;
+  padding: 0;
+  border:0;
+  color:white;
+  overflow-x: hidden;
+  font-family:Arial, Helvetica, sans-serif;
+}
+p{
+  margin:0 1% 0 1%;
+}
+#container{
+  width:1000px;
+  margin:auto;
+  height: 100%;
+}
+.listObj{
+
+}
+.iCont{
+  float:left;
+  width: 320px;
+  height: 98%;
+  margin:0 calc(40px / 6) 0 calc(40px / 6);
+  background: #2f3642;
+}
+.catHeader{
+  float:left;
+}
+.addbtn{
+  float:right;
+  margin: 1px 3px 1px 1px;
+}
+.listObj{
+  width: 316px;
+  float:left;
+  margin: 0 2px 0 2px;
+  background: #2f3642;
+
+}
+.todotext{
+  float:left;
+}
+.fa-pencil-square-o{
+  display: inline-block;
+
+}
+.donebtn{
+  float:right;
+}
+.delbtn{
+  float:right;
+}
+button{
+  color:inherit;
+  border: none;
+  min-height: 28px;
+  min-width: 28px;
+  margin: 1px 1px 1px 1px;
+  background: #5e6c84;
+}
+input{
+  background: #5e6c84;
+  color:inherit;
+  border: none;
+  min-height: 26px;
+  min-width: 254px;
+  margin: 1px 0px 1px 0px;
+}
+::placeholder {
+  color: #2f3642;
+}

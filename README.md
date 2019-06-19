@@ -1,2 +1,2 @@
 # todolists
-To do list(s) made with js.
+To do list(s).

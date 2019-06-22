@@ -1,7 +1,3 @@
-/*
-nuoli napit?
-containereiden lisääminen, poisto ja tierit
-*/
 var r = 3, m = 2, l = 1;
 var right = document.getElementById("right");
 var middle = document.getElementById("middle");
@@ -9,9 +5,21 @@ var left = document.getElementById("left");
 var saveTextTimeout;
 
 function getTodo(){
-  let text = localStorage.getItem("todoJSON");
+  let text = localStorage.getItem("objsJSON");
   obj = JSON.parse(text);
   return obj;
+}
+
+function setTodoId(objs){
+  for(let i = 0; i<objs.length;i++){
+    objs[i].id = i;
+  }
+  return objs;
+}
+
+function saveToLocalStorage(objs){
+  let objsJSON = JSON.stringify(objs);
+  localStorage.setItem("objsJSON", objsJSON);
 }
 
 function addTodo(col){
@@ -78,7 +86,7 @@ function appendTodo(column,obj){
 }
 
 function stt(text, id){
-  saveTextTimeout = setTimeout(function(){storeText(text, id);}, 1000);
+  saveTextTimeout = setTimeout(function(){storeText(text, id);}, 300);
 }
 
 function storeText(text, id){
@@ -90,8 +98,7 @@ function storeText(text, id){
     }
   });
 
-  let todoJSON = JSON.stringify(objs);
-  localStorage.setItem("todoJSON", todoJSON);
+  saveToLocalStorage(objs);
 }
 
 function storeTodo(obj){
@@ -99,8 +106,7 @@ function storeTodo(obj){
   if (objs===null){objs=[];}
   objs.push(obj);
 
-  let todoJSON = JSON.stringify(objs);
-  localStorage.setItem("todoJSON", todoJSON);
+  saveToLocalStorage(objs);
 }
 
 function loadTodo(){
@@ -127,8 +133,7 @@ function doneTodo(e){
     }
   });
 
-  let todoJSON = JSON.stringify(objs);
-  localStorage.setItem("todoJSON", todoJSON);
+  saveToLocalStorage(objs);
   loadTodo();
 }
 
@@ -149,17 +154,8 @@ function delTodo(id){
   }
 
   setTodoId(objs);
-
-  let todoJSON = JSON.stringify(objs);
-  localStorage.setItem("todoJSON", todoJSON);
+  saveToLocalStorage(objs);
   loadTodo();
-}
-
-function setTodoId(objs){
-  for(let i = 0; i<objs.length;i++){
-    objs[i].id = i;
-  }
-  return objs;
 }
 
 function clearTodo(){

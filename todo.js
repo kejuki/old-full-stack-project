@@ -54,9 +54,10 @@ function createTodo(obj){
   delbtn.classList.add("delbtn", "fa", "fa-trash-o");
 
   if(obj.isDone){
-    textarea.setAttribute("style","background-color: green");
-    delbtn.setAttribute("style","background-color: green");
-    donebtn.setAttribute("style","background-color: green");
+    listObj.setAttribute("style","background-color: rgb(0, 30, 0)");
+    textarea.setAttribute("style","background-color: DarkGreen");
+    delbtn.setAttribute("style","background-color: DarkGreen");
+    donebtn.setAttribute("style","background-color: DarkGreen");
   }
   delbtn.setAttribute("onclick","delTodo("+obj.id+");");
   donebtn.setAttribute("onclick","doneTodo("+obj.id+");");

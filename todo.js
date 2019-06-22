@@ -30,6 +30,7 @@ function addTodo(col){
               text: "",
               isDone: false,
               toBeDeleted: false
+              //scrollHeight?
             };
   try { setTodoId(getTodo());} catch (e) {}
   try { obj.id = getTodo().length; } catch (e) {}
@@ -43,27 +44,32 @@ function addTodo(col){
 
 function createTodo(obj){
   let listObj = document.createElement("div");
-  let input = document.createElement("input");
+  let textarea = document.createElement("textarea");
   let donebtn = document.createElement("button");
   let delbtn = document.createElement("button");
 
-  input.classList.add("todoinput");
+  textarea.classList.add("todoinput");
   listObj.classList.add("listObj");
   donebtn.classList.add("donebtn", "fa", "fa-check-square");
   delbtn.classList.add("delbtn", "fa", "fa-trash-o");
 
   if(obj.isDone){
-    input.setAttribute("style","background-color: green");
+    textarea.setAttribute("style","background-color: green");
     delbtn.setAttribute("style","background-color: green");
     donebtn.setAttribute("style","background-color: green");
   }
   delbtn.setAttribute("onclick","delTodo("+obj.id+");");
   donebtn.setAttribute("onclick","doneTodo("+obj.id+");");
-  input.setAttribute("value",obj.text);
-  input.setAttribute("placeholder", "Write here!");
-  input.setAttribute("oninput", "stt(value, "+obj.id+");");
+  textarea.value=obj.text;
+  textarea.setAttribute("placeholder", "Write here!");
+  textarea.setAttribute("oninput",
+                        "stt(value, "+obj.id+");" +
+                        'this.style.height = "";' +
+                        'this.style.height = this.scrollHeight + "px"');
+  //textarea.style.height = textarea.scrollHeight + "px";
+
   listObj.setAttribute("id", "lo"+obj.id);
-  listObj.appendChild(input);
+  listObj.appendChild(textarea);
   listObj.appendChild(donebtn);
   listObj.appendChild(delbtn);
 
@@ -123,7 +129,7 @@ function doneTodo(e){
   let objs = getTodo();
 
   objs.forEach(function(g){
-    if(e===g.e){
+    if(e===g.id){
       if(objs[e].isDone){
         objs[e].isDone=false;
       }
@@ -171,9 +177,7 @@ function clearTodo(){
   }
 }
 
-window.addEventListener('keypress', function() {
-  window.clearTimeout(saveTextTimeout);
-}, true);
+window.addEventListener('keypress', function() { window.clearTimeout(saveTextTimeout);}, true);
 
 document.addEventListener("DOMContentLoaded", function(event) {
   loadTodo();

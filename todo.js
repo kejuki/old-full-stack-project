@@ -4,13 +4,13 @@ var middle = document.getElementById("middle");
 var left = document.getElementById("left");
 var saveTextTimeout;
 
-function getTodo(){
+function getTod(){
   let text = localStorage.getItem("objsJSON");
   obj = JSON.parse(text);
   return obj;
 }
 
-function setTodoId(objs){
+function setTodId(objs){
   for(let i = 0; i<objs.length;i++){
     objs[i].id = i;
   }
@@ -22,27 +22,26 @@ function saveToLocalStorage(objs){
   localStorage.setItem("objsJSON", objsJSON);
 }
 
-function addTodo(col){
-  loadTodo();
+function addTod(col){
+  loadTod();
   let obj = {
               id: 0,
               column: col,
               text: "",
               isDone: false,
               toBeDeleted: false
-              //scrollHeight?
             };
-  try { setTodoId(getTodo());} catch (e) {}
-  try { obj.id = getTodo().length; } catch (e) {}
+  try { setTodId(getTod());} catch (e) {}
+  try { obj.id = getTod().length; } catch (e) {}
   if(obj.id===null){obj.id=0;}
 
 
-  createTodo(obj);
-  storeTodo(obj);
-  loadTodo();
+  createTod(obj);
+  storeTod(obj);
+  loadTod();
 }
 
-function createTodo(obj){
+function createTod(obj){
   let listObj = document.createElement("div");
   let textarea = document.createElement("textarea");
   let donebtn = document.createElement("button");
@@ -59,16 +58,15 @@ function createTodo(obj){
     delbtn.setAttribute("style","background-color: DarkGreen");
     donebtn.setAttribute("style","background-color: DarkGreen");
   }
-  delbtn.setAttribute("onclick","delTodo("+obj.id+");");
-  donebtn.setAttribute("onclick","doneTodo("+obj.id+");");
+  delbtn.setAttribute("onclick","delTod("+obj.id+");");
+  donebtn.setAttribute("onclick","doneTod("+obj.id+");");
   textarea.value=obj.text;
   textarea.setAttribute("placeholder", "Write here!");
   textarea.setAttribute("oninput",
                         "stt(value, "+obj.id+");" +
                         'this.style.height = "";' +
                         'this.style.height = this.scrollHeight + "px"');
-  //textarea.style.height = textarea.scrollHeight + "px";
-
+  
   listObj.setAttribute("id", "lo"+obj.id);
   listObj.appendChild(textarea);
   listObj.appendChild(donebtn);
@@ -77,7 +75,10 @@ function createTodo(obj){
   return listObj;
 }
 
-function appendTodo(column,obj){
+
+
+
+function appendTod(column,obj){
   switch (column) {
     case 1:
       left.appendChild(obj);
@@ -97,37 +98,46 @@ function stt(text, id){
 }
 
 function storeText(text, id){
-  let objs = getTodo();
+  let objs = getTod();
 
   objs.forEach(function(obj){
     if(id===obj.id){
       obj.text = text;
     }
   });
-
   saveToLocalStorage(objs);
 }
 
-function storeTodo(obj){
-  let objs = getTodo();
+function storeTod(obj){
+  let objs = getTod();
   if (objs===null){objs=[];}
   objs.push(obj);
 
   saveToLocalStorage(objs);
 }
 
-function loadTodo(){
-  clearTodo();
-  let objs = getTodo();
+function loadTod(){
+  clearTod();
+  let objs = getTod();
   if(objs!==null){
     for(let i = 0; i<objs.length;i++){
-      appendTodo(objs[i].column, createTodo(objs[i]));
+      appendTod(objs[i].column, createTod(objs[i]));
     }
   }
+  textBoxResize();
 }
 
-function doneTodo(e){
-  let objs = getTodo();
+function textBoxResize(){
+  let textareasc = document.getElementsByClassName("todoinput");
+  let textareas = Array.from(textareasc);
+  console.log(textareas);
+  textareas.forEach(function(ta){
+    ta.style.height = ta.scrollHeight + "px";
+  })
+}
+
+function doneTod(e){
+  let objs = getTod();
 
   objs.forEach(function(g){
     if(e===g.id){
@@ -141,12 +151,12 @@ function doneTodo(e){
   });
 
   saveToLocalStorage(objs);
-  loadTodo();
+  loadTod();
 }
 
-function delTodo(id){
+function delTod(id){
 
-  let objs = getTodo();
+  let objs = getTod();
 
   objs.forEach(function(obj){
     if(id===obj.id){
@@ -160,12 +170,12 @@ function delTodo(id){
     }
   }
 
-  setTodoId(objs);
+  setTodId(objs);
   saveToLocalStorage(objs);
-  loadTodo();
+  loadTod();
 }
 
-function clearTodo(){
+function clearTod(){
 
   while (left.firstChild) {
       left.removeChild(left.firstChild);
@@ -181,5 +191,5 @@ function clearTodo(){
 window.addEventListener('keypress', function() { window.clearTimeout(saveTextTimeout);}, true);
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  loadTodo();
+  loadTod();
 });

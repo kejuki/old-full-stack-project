@@ -26,15 +26,15 @@ var saveTextTimeout;
 function AddTod(col){
   LoadTod();
   let obj = {
-              id: 0,
-              column: col,
-              text: "",
-              isDone: false,
-              toBeDeleted: false
-            };
-  try { SetTodId(GetTod());} catch (e) {}
-  try { obj.id = GetTod().length; } catch (e) {}
-  if(obj.id===null){obj.id=0;}
+    id: 0,
+    column: col,
+    text: "",
+    isDone: false,
+    toBeDeleted: false
+  };
+  try { SetTodId(GetObj("objsJSON"));} catch (e) {}
+  try { obj.id = GetObj("objsJSON").length; } catch (e) {}
+  
 
 
   CreateTod(obj);
@@ -105,27 +105,27 @@ function STT(text, id){
 }
 
 function StoreText(text, id){
-  let objs = GetTod();
+  let objs = GetObj("objsJSON");
 
   objs.forEach((obj) => {
     if(id===obj.id){
       obj.text = text;
     }
   });
-  SaveToLocalStorage(objs);
+  SaveToLocalStorage(objs, "objsJSON");
 }
 
 function StoreTod(obj){
-  let objs = GetTod();
+  let objs = GetObj("objsJSON");
   if (objs===null){objs=[];}
   objs.push(obj);
 
-  SaveToLocalStorage(objs);
+  SaveToLocalStorage(objs, "objsJSON");
 }
 
 function LoadTod(){
   ClearTod();
-  let objs = GetTod();
+  let objs = GetObj("objsJSON");
   if(objs!==null){
     for(let i = 0; i<objs.length;i++){
       AppendTod(objs[i].column, CreateTod(objs[i]));
@@ -142,19 +142,19 @@ function ResizeTextarea(){
   })
 }
 
-function GetTod(){
-  let text = localStorage.getItem("objsJSON");
-  obj = JSON.parse(text);
+function GetObj(objType){ //objtype = objsJSON/colObjsJSON
+  let text = localStorage.getItem(objType);
+  let obj = JSON.parse(text);
   return obj;
 }
 
-function SaveToLocalStorage(objs){
+function SaveToLocalStorage(objs, objType){
   let objsJSON = JSON.stringify(objs);
-  localStorage.setItem("objsJSON", objsJSON);
+  localStorage.setItem(objType, objsJSON);
 }
 
 function DoneTod(e){
-  let objs = GetTod();
+  let objs = GetObj("objsJSON");
 
   objs.forEach((g) => {
     if(e===g.id){
@@ -167,13 +167,13 @@ function DoneTod(e){
     }
   });
 
-  SaveToLocalStorage(objs);
+  SaveToLocalStorage(objs, "objsJSON");
   LoadTod();
 }
 
 function DeleteTod(id){
 
-  let objs = GetTod();
+  let objs = GetObj("objsJSON");
 
   objs.forEach((obj) => {
     if(id===obj.id){
@@ -188,7 +188,7 @@ function DeleteTod(id){
   }
 
   SetTodId(objs);
-  SaveToLocalStorage(objs);
+  SaveToLocalStorage(objs, "objsJSON");
   LoadTod();
 }
 
@@ -209,7 +209,29 @@ function ClearTod(){
 //* ------------------------------------------------------------------------ */
 //* ------------------------------------------------------------------------ */
 
-function CreateCol(){
+function AddCol(){
+  loadCol();
+  let colObj = {
+    id: 0,
+    title: "",
+    toBeDeleted: false
+  }
+  try { SetColId(GetObj("colObjsJSON"));} catch (e) {}
+  try { colObj.id = GetObj("colObjsJSON").length; } catch (e) {}
+  if(colObj.id===null){colObj.id=0;}
+
+  CreateCol(colObj);
+  return null;
+}
+
+function SetColId(objs){
+  for(let i = 0; i<objs.length;i++){
+    objs[i].id = i;
+  }
+  return objs;
+}
+
+function CreateCol(colObj){
   let col = document.createElement("div");
   let colHeader = document.createElement("p");
   let objCont = document.createElement("div");
@@ -218,27 +240,34 @@ function CreateCol(){
 
   col.classList.add("col");
   colHeader.classList.add("colHeader");
-  objCont.id = "a"; // variable
+  objCont.id = "col"+colObj.id;
   delColBtn.classList.add("delColBtn");
   addBtn.classList.add("addbtn");
 
-  addBtn.setAttribute("onclick", ""); //addTod(col index)
-  delColBtn.setAttribute("onclick", ""); //delete col method
-  colHeader.innerHTML="title"; //title from obj
+  addBtn.setAttribute("onclick", "AddTod(m)"); //addTod(col index)
+  delColBtn.setAttribute("onclick", "DeleteCol("+colObj.id+")");
+  colHeader.innerHTML=colObj.title;
+  addBtn.innerHTML = "+";
+  delColBtn.innerHTML = "-";
   
   col.appendChild(colHeader);
   col.appendChild(delColBtn);
   col.appendChild(objCont);
   col.appendChild(addBtn);
 
-  container.style.width = 324 * 4 + "px"; //add width with new cols
+  
   container.appendChild(col);
-
+  return col;
 }
-CreateCol()
+AddCol();
 function loadCol(){
   return null;
 }
+function DeleteCol(id){
+  return null;
+}
+
+container.style.width = 324 * 4 + "px"; //add width with new cols
 
 function saveCol(){
   return null;

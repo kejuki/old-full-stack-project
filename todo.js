@@ -13,18 +13,14 @@ add confirmation to delete btn.
 get rid of hardcoded variables.
 separate to different files.
 */
-const container = document.getElementById("container");
 
-var r = 3, m = 2, l = 1;
-var right = document.getElementById("right");
-var middle = document.getElementById("middle");
-var left = document.getElementById("left");
+const container = document.getElementById("container");
 
 var saveTextTimeout;
 
 
 function AddTod(col){
-  LoadTod();
+  Load();
   let obj = {
     id: 0,
     column: col,
@@ -35,11 +31,9 @@ function AddTod(col){
   try { SetTodId(GetObj("objsJSON"));} catch (e) {}
   try { obj.id = GetObj("objsJSON").length; } catch (e) {}
   
-
-
   CreateTod(obj);
-  StoreTod(obj);
-  LoadTod();
+  StoreObj(obj, "objsJSON");
+  Load();
 }
 
 function SetTodId(objs){
@@ -85,19 +79,8 @@ function CreateTod(obj){
 
 function AppendTod(column,obj){
 
+  col0.appendChild(obj); //redo this
   
-  switch (column) {
-    case 1:
-      left.appendChild(obj);
-      break;
-    case 2:
-      middle.appendChild(obj);
-      break;
-    case 3:
-      right.appendChild(obj);
-      break;
-    default:
-  }
 }
 
 function STT(text, id){
@@ -115,23 +98,12 @@ function StoreText(text, id){
   SaveToLocalStorage(objs, "objsJSON");
 }
 
-function StoreTod(obj){
-  let objs = GetObj("objsJSON");
+function StoreObj(obj, objType){
+  let objs = GetObj(objType);
   if (objs===null){objs=[];}
   objs.push(obj);
 
-  SaveToLocalStorage(objs, "objsJSON");
-}
-
-function LoadTod(){
-  ClearTod();
-  let objs = GetObj("objsJSON");
-  if(objs!==null){
-    for(let i = 0; i<objs.length;i++){
-      AppendTod(objs[i].column, CreateTod(objs[i]));
-    }
-  }
-  ResizeTextarea();
+  SaveToLocalStorage(objs, objType);
 }
 
 function ResizeTextarea(){
@@ -168,7 +140,7 @@ function DoneTod(e){
   });
 
   SaveToLocalStorage(objs, "objsJSON");
-  LoadTod();
+  Load();
 }
 
 function DeleteTod(id){
@@ -189,20 +161,7 @@ function DeleteTod(id){
 
   SetTodId(objs);
   SaveToLocalStorage(objs, "objsJSON");
-  LoadTod();
-}
-
-function ClearTod(){ 
-
-  while (left.firstChild) {
-      left.removeChild(left.firstChild);
-  }
-  while (middle.firstChild) {
-      middle.removeChild(middle.firstChild);
-  }
-  while (right.firstChild) {
-      right.removeChild(right.firstChild);
-  }
+  Load();
 }
 
 //* ------------------------------------------------------------------------ */
@@ -210,7 +169,7 @@ function ClearTod(){
 //* ------------------------------------------------------------------------ */
 
 function AddCol(){
-  loadCol();
+  Load();
   let colObj = {
     id: 0,
     title: "",
@@ -221,6 +180,8 @@ function AddCol(){
   if(colObj.id===null){colObj.id=0;}
 
   CreateCol(colObj);
+  StoreObj(colObj, "colObjsJSON");
+  
   return null;
 }
 
@@ -244,7 +205,7 @@ function CreateCol(colObj){
   delColBtn.classList.add("delColBtn");
   addBtn.classList.add("addbtn");
 
-  addBtn.setAttribute("onclick", "AddTod(m)"); //addTod(col index)
+  addBtn.setAttribute("onclick", "AddTod("+colObj.id+")"); //addTod(col index)
   delColBtn.setAttribute("onclick", "DeleteCol("+colObj.id+")");
   colHeader.innerHTML=colObj.title;
   addBtn.innerHTML = "+";
@@ -259,12 +220,31 @@ function CreateCol(colObj){
   container.appendChild(col);
   return col;
 }
-AddCol();
-function loadCol(){
-  return null;
+
+function Load(){
+  ClearCont();
+  let colObjs = GetObj("colObjsJSON");
+  let todObjs = GetObj("objsJSON");
+  if(colObjs!==null){
+    for(let i = 0; i<colObjs.length;i++){
+      CreateCol(colObjs[i]);
+    }
+  }
+  if(todObjs!==null){
+    for(let i = 0; i<todObjs.length;i++){
+      AppendTod(todObjs[i].column, CreateTod(todObjs[i]));
+    }
+  }
+  ResizeTextarea();
+
 }
 function DeleteCol(id){
   return null;
+}
+function ClearCont(){
+  while (container.firstChild){
+    container.removeChild(container.firstChild);
+  }
 }
 
 container.style.width = 324 * 4 + "px"; //add width with new cols
@@ -276,6 +256,5 @@ function saveCol(){
 window.addEventListener('keypress', () => { window.clearTimeout(saveTextTimeout);}, true);
 
 document.addEventListener("DOMContentLoaded", (event) => {
-    loadCol();
-    LoadTod();
+    Load();
   });

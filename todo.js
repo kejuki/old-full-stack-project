@@ -1,20 +1,16 @@
 
 /*
-create a method that creates column,
-  adds width to #container,
-  saves the containers
 create a method that deletes the col with confirmation, 
   redoes the order and 
   recuces #container width
   deletes the objs with col x
-create a method that creates an add container button.
-recreate ClrearTod method.
 add addbutton to the bottom as an object.
 add confirmation to delete btn.
 separate to different files.
 */
-
+const content = document.getElementById("content");
 const container = document.getElementById("container");
+
 
 var saveTextTimeout;
 
@@ -27,9 +23,8 @@ function AddTod(col){
     column: col,
     text: "",
     isDone: false,
-    toBeDeleted: false
   };
-  try { SetTodId(GetObj("objsJSON"));} catch (e) {}
+  try { SetObjId(GetObj("objsJSON"));} catch (e) {}
   try { obj.id = GetObj("objsJSON").length; } catch (e) {}
   
   CreateTod(obj);
@@ -37,9 +32,11 @@ function AddTod(col){
   Load();
 }
 
-function SetTodId(objs){
-  for(let i = 0; i<objs.length;i++){
-    objs[i].id = i;
+function SetObjId(objs){
+  if(objs!==null){
+    for(let i = 0; i<objs.length;i++){
+      objs[i].id = i;
+    }
   }
   return objs;
 }
@@ -79,10 +76,9 @@ function CreateTod(obj){
 }
 
 function AppendTod(column,obj){
-
   let colToAppend = document.getElementById("col" + column);
-  colToAppend.appendChild(obj);
-  
+  colToAppend !== null ? colToAppend.appendChild(obj) : null;
+
 }
 
 function STT(text, id){
@@ -114,6 +110,11 @@ function ResizeTextarea(){
   textareas.forEach((ta) => {
     ta.style.height = ta.scrollHeight + "px";
   })
+}
+
+function ResizeCont(leng){
+  container.style.width = 324 * leng + "px";
+  content.style.width = 324 * leng + 60 + "px";
 }
 
 function GetObj(objType){ //objtype = objsJSON/colObjsJSON
@@ -150,48 +151,30 @@ function DeleteTod(id){
   let objs = GetObj("objsJSON");
 
   objs.forEach((obj) => {
-    if(id===obj.id){
-      objs[id].toBeDeleted=true;
-    }
+    id === obj.id ? objs.splice(id,1) : null;
   });
 
-  for(let i = 0; i<objs.length;i++){
-    if(objs[i].toBeDeleted===true){
-      objs.splice(i,1);
-    }
-  }
-
-  SetTodId(objs);
+  SetObjId(objs);
   SaveToLocalStorage(objs, "objsJSON");
   Load();
 }
 
-//* ------------------------------------------------------------------------ */
-//* ------------------------------------------------------------------------ */
 //* ------------------------------------------------------------------------ */
 
 function AddCol(){
   Load();
   let colObj = {
     id: 0,
-    title: "",
-    toBeDeleted: false
+    title: ""
   }
-  try { SetColId(GetObj("colObjsJSON"));} catch (e) {}
+  try { SetObjId(GetObj("colObjsJSON"));} catch (e) {}
   try { colObj.id = GetObj("colObjsJSON").length; } catch (e) {}
   if(colObj.id===null){colObj.id=0;}
 
   CreateCol(colObj);
   StoreObj(colObj, "colObjsJSON");
   
-  return null;
-}
-
-function SetColId(objs){
-  for(let i = 0; i<objs.length;i++){
-    objs[i].id = i;
-  }
-  return objs;
+  Load();
 }
 
 function CreateCol(colObj){
@@ -207,8 +190,8 @@ function CreateCol(colObj){
   delColBtn.classList.add("delColBtn");
   addBtn.classList.add("addbtn");
 
-  addBtn.setAttribute("onclick", "AddTod("+colObj.id+")"); //addTod(col index)
-  delColBtn.setAttribute("onclick", "DeleteCol("+colObj.id+")");
+  addBtn.setAttribute("onclick", "AddTod("+colObj.id+");"); //addTod(col index)
+  delColBtn.setAttribute("onclick", "DeleteCol("+colObj.id+");");
   colHeader.innerHTML=colObj.title;
   addBtn.innerHTML = "+";
   delColBtn.innerHTML = "-";
@@ -231,6 +214,7 @@ function Load(){
     for(let i = 0; i<colObjs.length;i++){
       CreateCol(colObjs[i]);
     }
+    ResizeCont(colObjs.length);
   }
   if(todObjs!==null){
     for(let i = 0; i<todObjs.length;i++){
@@ -238,21 +222,34 @@ function Load(){
     }
   }
   ResizeTextarea();
+}
 
-}
 function DeleteCol(id){
-  return null;
+  let objs = GetObj("objsJSON");
+  let colObjs = GetObj("colObjsJSON");
+
+  if(objs !== null){
+    for(let i = 0; i < objs.length; i++){
+      if (objs[i].column === id){
+        objs.splice(i,1);
+      }
+    }
+  }
+
+  colObjs.forEach((colObj) => {
+    id === colObj.id ? colObjs.splice(id, 1) : null;
+  });
+  SetObjId(colObjs);
+  SetObjId(objs);
+  SaveToLocalStorage(objs, "objsJSON");
+  SaveToLocalStorage(colObjs, "colObjsJSON");
+  Load();
 }
+
 function ClearCont(){
   while (container.firstChild){
     container.removeChild(container.firstChild);
   }
-}
-
-container.style.width = 324 * 4 + "px"; //add width with new cols
-
-function saveCol(){
-  return null;
 }
 
 window.addEventListener('keypress', () => { window.clearTimeout(saveTextTimeout);}, true);

@@ -3,14 +3,14 @@
 create a method that creates column,
   adds width to #container,
   saves the containers
-create a method that deletes the container with confirmation, 
+create a method that deletes the col with confirmation, 
   redoes the order and 
   recuces #container width
+  deletes the objs with col x
 create a method that creates an add container button.
 recreate ClrearTod method.
 add addbutton to the bottom as an object.
 add confirmation to delete btn.
-get rid of hardcoded variables.
 separate to different files.
 */
 
@@ -21,6 +21,7 @@ var saveTextTimeout;
 
 function AddTod(col){
   Load();
+
   let obj = {
     id: 0,
     column: col,
@@ -79,7 +80,8 @@ function CreateTod(obj){
 
 function AppendTod(column,obj){
 
-  col0.appendChild(obj); //redo this
+  let colToAppend = document.getElementById("col" + column);
+  colToAppend.appendChild(obj);
   
 }
 

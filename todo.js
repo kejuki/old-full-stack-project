@@ -12,10 +12,10 @@ const content = document.getElementById("content");
 const container = document.getElementById("container");
 
 
-var saveTextTimeout;
+let saveTextTimeout;
 
 
-function AddTod(col){
+const AddTod = col => {
   Load();
 
   let obj = {
@@ -24,6 +24,7 @@ function AddTod(col){
     text: "",
     isDone: false,
   };
+  
   try { SetObjId(GetObj("objsJSON"));} catch (e) {}
   try { obj.id = GetObj("objsJSON").length; } catch (e) {}
   
@@ -32,7 +33,7 @@ function AddTod(col){
   Load();
 }
 
-function SetObjId(objs){
+const SetObjId = objs => {
   if(objs!==null){
     for(let i = 0; i<objs.length;i++){
       objs[i].id = i;
@@ -41,11 +42,11 @@ function SetObjId(objs){
   return objs;
 }
 
-function CreateTod(obj){
-  let listObj = document.createElement("div");
-  let textarea = document.createElement("textarea");
-  let donebtn = document.createElement("button");
-  let delbtn = document.createElement("button");
+const CreateTod = obj => {
+  const listObj = document.createElement("div");
+  const textarea = document.createElement("textarea");
+  const donebtn = document.createElement("button");
+  const delbtn = document.createElement("button");
 
   textarea.classList.add("todoinput");
   listObj.classList.add("listObj");
@@ -59,9 +60,10 @@ function CreateTod(obj){
     delbtn.setAttribute("style","background-color: DarkGreen");
     donebtn.setAttribute("style","background-color: DarkGreen");
   }
+
   delbtn.setAttribute("onclick","DeleteTod("+obj.id+");");
   donebtn.setAttribute("onclick","DoneTod("+obj.id+");");
-  textarea.value=obj.text;
+  textarea.value = obj.text;
   textarea.setAttribute("placeholder", "Write here!");
   textarea.setAttribute("oninput",
                         "STT(value, "+obj.id+");" +
@@ -75,36 +77,34 @@ function CreateTod(obj){
   return listObj;
 }
 
-function AppendTod(column,obj){
+const AppendTod = (column,obj) => {
   let colToAppend = document.getElementById("col" + column);
   colToAppend !== null ? colToAppend.appendChild(obj) : null;
-
 }
 
-function STT(text, id){
+const STT = (text, id) => {
   saveTextTimeout = setTimeout(() => {StoreText(text, id);}, 300);
 }
 
-function StoreText(text, id){
+const StoreText = (text, id) => {
   let objs = GetObj("objsJSON");
 
   objs.forEach((obj) => {
-    if(id===obj.id){
-      obj.text = text;
-    }
+    id===obj.id ? obj.text = text : null;
   });
+
   SaveToLocalStorage(objs, "objsJSON");
 }
 
-function StoreObj(obj, objType){
+const StoreObj = (obj, objType) => {
   let objs = GetObj(objType);
-  if (objs===null){objs=[];}
+  objs === null ? objs=[] : null;
   objs.push(obj);
 
   SaveToLocalStorage(objs, objType);
 }
 
-function ResizeTextarea(){
+const ResizeTextarea = () =>{
   let textareasc = document.getElementsByClassName("todoinput");
   let textareas = Array.from(textareasc);
   textareas.forEach((ta) => {
@@ -112,41 +112,38 @@ function ResizeTextarea(){
   })
 }
 
-function ResizeCont(leng){
+const ResizeCont = leng => {
   container.style.width = 324 * leng + "px";
   content.style.width = 324 * leng + 60 + "px";
 }
 
-function GetObj(objType){ //objtype = objsJSON/colObjsJSON
+const GetObj = objType => { //objtype = objsJSON/colObjsJSON
   let text = localStorage.getItem(objType);
   let obj = JSON.parse(text);
   return obj;
 }
 
-function SaveToLocalStorage(objs, objType){
+const SaveToLocalStorage = (objs, objType) => {
   let objsJSON = JSON.stringify(objs);
   localStorage.setItem(objType, objsJSON);
 }
 
-function DoneTod(e){
+const DoneTod = i =>{
   let objs = GetObj("objsJSON");
 
-  objs.forEach((g) => {
-    if(e===g.id){
-      if(objs[e].isDone){
-        objs[e].isDone=false;
-      }
-      else{
-        objs[e].isDone=true;
-      }
-    }
+  objs.forEach((obj) => {
+    i === obj.id ? 
+      objs[i].isDone ?
+      objs[i].isDone = false :
+      objs[i].isDone = true : 
+      null;
   });
 
   SaveToLocalStorage(objs, "objsJSON");
   Load();
 }
 
-function DeleteTod(id){
+const DeleteTod = id => {
 
   let objs = GetObj("objsJSON");
 
@@ -161,15 +158,17 @@ function DeleteTod(id){
 
 //* ------------------------------------------------------------------------ */
 
-function AddCol(){
+const AddCol = () =>{
+
   Load();
+
   let colObj = {
     id: 0,
     title: ""
   }
+
   try { SetObjId(GetObj("colObjsJSON"));} catch (e) {}
   try { colObj.id = GetObj("colObjsJSON").length; } catch (e) {}
-  if(colObj.id===null){colObj.id=0;}
 
   CreateCol(colObj);
   StoreObj(colObj, "colObjsJSON");
@@ -177,12 +176,12 @@ function AddCol(){
   Load();
 }
 
-function CreateCol(colObj){
-  let col = document.createElement("div");
-  let colHeader = document.createElement("p");
-  let objCont = document.createElement("div");
-  let delColBtn = document.createElement("Button");
-  let addBtn = document.createElement("Button");
+const CreateCol = colObj => {
+  const col = document.createElement("div");
+  const colHeader = document.createElement("p");
+  const objCont = document.createElement("div");
+  const delColBtn = document.createElement("Button");
+  const addBtn = document.createElement("Button");
 
   col.classList.add("col");
   colHeader.classList.add("colHeader");
@@ -190,9 +189,9 @@ function CreateCol(colObj){
   delColBtn.classList.add("delColBtn");
   addBtn.classList.add("addbtn");
 
-  addBtn.setAttribute("onclick", "AddTod("+colObj.id+");"); //addTod(col index)
+  addBtn.setAttribute("onclick", "AddTod("+colObj.id+");");
   delColBtn.setAttribute("onclick", "DeleteCol("+colObj.id+");");
-  colHeader.innerHTML=colObj.title;
+  colHeader.innerHTML = colObj.title;
   addBtn.innerHTML = "+";
   delColBtn.innerHTML = "-";
   
@@ -206,47 +205,58 @@ function CreateCol(colObj){
   return col;
 }
 
-function Load(){
+const Load = () => {
+
   ClearCont();
+
   let colObjs = GetObj("colObjsJSON");
   let todObjs = GetObj("objsJSON");
+
   if(colObjs!==null){
     for(let i = 0; i<colObjs.length;i++){
       CreateCol(colObjs[i]);
     }
     ResizeCont(colObjs.length);
   }
+
   if(todObjs!==null){
     for(let i = 0; i<todObjs.length;i++){
       AppendTod(todObjs[i].column, CreateTod(todObjs[i]));
     }
   }
+
   ResizeTextarea();
 }
 
-function DeleteCol(id){
+const DeleteCol = id => {
+  
   let objs = GetObj("objsJSON");
   let colObjs = GetObj("colObjsJSON");
 
   if(objs !== null){
-    for(let i = 0; i < objs.length; i++){
-      if (objs[i].column === id){
-        objs.splice(i,1);
-      }
+    for(let i = objs.length -1; i >= 0; i--){
+      objs[i].column === id ? objs.splice(i,1) : null;
     }
+  }
+
+  for(let i = 0; i<objs.length; i++){
+    objs[i].column > id ? objs[i].column-- : null;
   }
 
   colObjs.forEach((colObj) => {
     id === colObj.id ? colObjs.splice(id, 1) : null;
   });
+
+
   SetObjId(colObjs);
   SetObjId(objs);
+
   SaveToLocalStorage(objs, "objsJSON");
   SaveToLocalStorage(colObjs, "colObjsJSON");
   Load();
 }
 
-function ClearCont(){
+const ClearCont = () => {
   while (container.firstChild){
     container.removeChild(container.firstChild);
   }
@@ -254,6 +264,6 @@ function ClearCont(){
 
 window.addEventListener('keypress', () => { window.clearTimeout(saveTextTimeout);}, true);
 
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", event => {
     Load();
   });

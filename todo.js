@@ -1,21 +1,11 @@
 
-/*
-create a method that deletes the col with confirmation, 
-  redoes the order and 
-  recuces #container width
-  deletes the objs with col x
-add addbutton to the bottom as an object.
-add confirmation to delete btn.
-separate to different files.
-*/
 const content = document.getElementById("content");
 const container = document.getElementById("container");
-
 
 let saveTextTimeout;
 
 
-const AddTod = col => {
+function AddTod(col) {
   Load();
 
   let obj = {
@@ -33,7 +23,7 @@ const AddTod = col => {
   Load();
 }
 
-const SetObjId = objs => {
+function SetObjId(objs) {
   if(objs!==null){
     for(let i = 0; i<objs.length;i++){
       objs[i].id = i;
@@ -42,7 +32,7 @@ const SetObjId = objs => {
   return objs;
 }
 
-const CreateTod = obj => {
+function CreateTod(obj) {
   const listObj = document.createElement("div");
   const textarea = document.createElement("textarea");
   const donebtn = document.createElement("button");
@@ -77,16 +67,16 @@ const CreateTod = obj => {
   return listObj;
 }
 
-const AppendTod = (column,obj) => {
+function AppendTod(column,obj) {
   let colToAppend = document.getElementById("col" + column);
   colToAppend !== null ? colToAppend.appendChild(obj) : null;
 }
 
-const STT = (text, id) => {
+function STT(text, id) {
   saveTextTimeout = setTimeout(() => {StoreText(text, id);}, 300);
 }
 
-const StoreText = (text, id) => {
+function StoreText(text, id) {
   let objs = GetObj("objsJSON");
 
   objs.forEach((obj) => {
@@ -96,7 +86,7 @@ const StoreText = (text, id) => {
   SaveToLocalStorage(objs, "objsJSON");
 }
 
-const StoreObj = (obj, objType) => {
+function StoreObj(obj, objType) {
   let objs = GetObj(objType);
   objs === null ? objs=[] : null;
   objs.push(obj);
@@ -104,7 +94,7 @@ const StoreObj = (obj, objType) => {
   SaveToLocalStorage(objs, objType);
 }
 
-const ResizeTextarea = () =>{
+function ResizeTextarea() {
   let textareasc = document.getElementsByClassName("todoinput");
   let textareas = Array.from(textareasc);
   textareas.forEach((ta) => {
@@ -112,30 +102,30 @@ const ResizeTextarea = () =>{
   })
 }
 
-const ResizeCont = leng => {
+function ResizeCont(leng) {
   container.style.width = 324 * leng + "px";
   content.style.width = 324 * leng + 60 + "px";
 }
 
-const GetObj = objType => { //objtype = objsJSON/colObjsJSON
+function GetObj(objType) { //objtype = objsJSON/colObjsJSON
   let text = localStorage.getItem(objType);
   let obj = JSON.parse(text);
   return obj;
 }
 
-const SaveToLocalStorage = (objs, objType) => {
+function SaveToLocalStorage(objs, objType) {
   let objsJSON = JSON.stringify(objs);
   localStorage.setItem(objType, objsJSON);
 }
 
-const DoneTod = i =>{
+function DoneTod(id) {
   let objs = GetObj("objsJSON");
 
   objs.forEach((obj) => {
-    i === obj.id ? 
-      objs[i].isDone ?
-      objs[i].isDone = false :
-      objs[i].isDone = true : 
+    id === obj.id ? 
+      objs[id].isDone ?
+      objs[id].isDone = false :
+      objs[id].isDone = true : 
       null;
   });
 
@@ -143,7 +133,7 @@ const DoneTod = i =>{
   Load();
 }
 
-const DeleteTod = id => {
+function DeleteTod(id) {
 
   let objs = GetObj("objsJSON");
 
@@ -158,7 +148,7 @@ const DeleteTod = id => {
 
 //* ------------------------------------------------------------------------ */
 
-const AddCol = () =>{
+function AddCol() {
 
   Load();
 
@@ -176,7 +166,7 @@ const AddCol = () =>{
   Load();
 }
 
-const CreateCol = colObj => {
+function CreateCol(colObj) {
   const col = document.createElement("div");
   const colHeader = document.createElement("p");
   const objCont = document.createElement("div");
@@ -205,7 +195,7 @@ const CreateCol = colObj => {
   return col;
 }
 
-const Load = () => {
+function Load() {
 
   ClearCont();
 
@@ -228,7 +218,7 @@ const Load = () => {
   ResizeTextarea();
 }
 
-const DeleteCol = id => {
+function DeleteCol(id) {
   
   let objs = GetObj("objsJSON");
   let colObjs = GetObj("colObjsJSON");
@@ -256,7 +246,7 @@ const DeleteCol = id => {
   Load();
 }
 
-const ClearCont = () => {
+function ClearCont(){
   while (container.firstChild){
     container.removeChild(container.firstChild);
   }

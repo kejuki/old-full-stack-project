@@ -1,4 +1,3 @@
-
 const content = document.getElementById("content");
 const container = document.getElementById("container");
 
@@ -21,6 +20,7 @@ function AddTod(col) {
   CreateTod(obj);
   StoreObj(obj, "objsJSON");
   Load();
+  GetTest();
 }
 
 function SetObjId(objs) {
@@ -116,6 +116,11 @@ function GetObj(objType) { //objtype = objsJSON/colObjsJSON
 function SaveToLocalStorage(objs, objType) {
   let objsJSON = JSON.stringify(objs);
   localStorage.setItem(objType, objsJSON);
+  /*
+  if (objType === "colObjsJSON"){
+    PostTest(objs);
+  }
+  */
 }
 
 function DoneTod(id) {
@@ -244,6 +249,8 @@ function DeleteCol(id) {
   SaveToLocalStorage(objs, "objsJSON");
   SaveToLocalStorage(colObjs, "colObjsJSON");
   Load();
+
+  DeleteTest(id);
 }
 
 function ClearCont(){
@@ -252,8 +259,42 @@ function ClearCont(){
   }
 }
 
+function PostTest(objs){
+  fetch("http://localhost:3000/cols/",{
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(objs[objs.length-1])
+  })
+  .then((response) => response.json())
+  .then((data) => { console.log("Success: ", objs[objs.length-1]);})
+  .catch((err) => { console.error("Error: ", err);});
+}
+
+function GetTest(){
+  fetch("http://localhost:3000/cols/",{
+    method:"GET",
+    header: {"Content-Type": "application/json"}})
+  .then(res => {
+    return res.json();
+  })
+  .then(data => {
+    console.log(data);
+  })
+}
+
+function DeleteTest(id){
+  fetch("http://localhost:3000/cols/" + id,{
+    method: "DELETE"
+  })
+  .then(res => res.json())
+  .then((data) => { console.log("Success: ", id);});
+}
 window.addEventListener('keypress', () => { window.clearTimeout(saveTextTimeout);}, true);
 
 document.addEventListener("DOMContentLoaded", event => {
     Load();
+    GetTest();
   });

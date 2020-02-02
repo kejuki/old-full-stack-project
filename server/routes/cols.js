@@ -39,8 +39,8 @@ router.post('/', async (req,res) => {
 
 //deletes a col
 router.delete('/:colId', async (req, res) => {
-    try {//deleteOne for final
-        const removedCol = await Col.deleteMany({id: req.params.colId});
+    try {
+        const removedCol = await Col.deleteOne({id: req.params.colId});
         res.json(removedCol);
     } catch (err) {
         res.json({message: err});

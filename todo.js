@@ -116,11 +116,11 @@ function GetObj(objType) { //objtype = objsJSON/colObjsJSON
 function SaveToLocalStorage(objs, objType) {
   let objsJSON = JSON.stringify(objs);
   localStorage.setItem(objType, objsJSON);
-  /*
+  
   if (objType === "colObjsJSON"){
     PostTest(objs);
   }
-  */
+  
 }
 
 function DoneTod(id) {

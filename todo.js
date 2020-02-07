@@ -4,20 +4,22 @@ const container = document.getElementById("container");
 let saveTextTimeout;
 
 
-function AddTod(col) {
+function AddTex(col) {
   Load();
 
   let obj = {
     id: 0,
     column: col,
+    title: "",
     text: "",
-    isDone: false,
+    done: false,
+    hidden: false
   };
   
   try { SetObjId(GetObj("objsJSON"));} catch (e) {}
   try { obj.id = GetObj("objsJSON").length; } catch (e) {}
   
-  CreateTod(obj);
+  CreateTex(obj);
   StoreObj(obj, "objsJSON");
   Load();
   GetTest();
@@ -32,7 +34,7 @@ function SetObjId(objs) {
   return objs;
 }
 
-function CreateTod(obj) {
+function CreateTex(obj) {
   const listObj = document.createElement("div");
   const textarea = document.createElement("textarea");
   const donebtn = document.createElement("button");
@@ -44,15 +46,15 @@ function CreateTod(obj) {
   delbtn.classList.add("delbtn", "fa", "fa-trash-o");
   listObj.id = "lo"+obj.id;
 
-  if(obj.isDone){
+  if(obj.done){
     listObj.setAttribute("style","background-color: rgb(0, 30, 0)");
     textarea.setAttribute("style","background-color: DarkGreen");
     delbtn.setAttribute("style","background-color: DarkGreen");
     donebtn.setAttribute("style","background-color: DarkGreen");
   }
 
-  delbtn.setAttribute("onclick","DeleteTod("+obj.id+");");
-  donebtn.setAttribute("onclick","DoneTod("+obj.id+");");
+  delbtn.setAttribute("onclick","DeleteTex("+obj.id+");");
+  donebtn.setAttribute("onclick","DoneTex("+obj.id+");");
   textarea.value = obj.text;
   textarea.setAttribute("placeholder", "Write here!");
   textarea.setAttribute("oninput",
@@ -67,7 +69,7 @@ function CreateTod(obj) {
   return listObj;
 }
 
-function AppendTod(column,obj) {
+function AppendTex(column,obj) {
   let colToAppend = document.getElementById("col" + column);
   colToAppend !== null ? colToAppend.appendChild(obj) : null;
 }
@@ -108,8 +110,13 @@ function ResizeCont(leng) {
 }
 
 function GetObj(objType) { //objtype = objsJSON/colObjsJSON
-  let text = localStorage.getItem(objType);
-  let obj = JSON.parse(text);
+  let text, obj
+  if(objType === "colObjsJSON"){
+    obj = GetColsTest();
+  }else{
+    text = localStorage.getItem(objType);
+    obj = JSON.parse(text);
+  }
   return obj;
 }
 
@@ -123,14 +130,14 @@ function SaveToLocalStorage(objs, objType) {
   
 }
 
-function DoneTod(id) {
+function DoneTex(id) {
   let objs = GetObj("objsJSON");
 
   objs.forEach((obj) => {
     id === obj.id ? 
-      objs[id].isDone ?
-      objs[id].isDone = false :
-      objs[id].isDone = true : 
+      objs[id].done ?
+      objs[id].done = false :
+      objs[id].done = true : 
       null;
   });
 
@@ -138,7 +145,7 @@ function DoneTod(id) {
   Load();
 }
 
-function DeleteTod(id) {
+function DeleteTex(id) {
 
   let objs = GetObj("objsJSON");
 
@@ -184,7 +191,7 @@ function CreateCol(colObj) {
   delColBtn.classList.add("delColBtn");
   addBtn.classList.add("addbtn");
 
-  addBtn.setAttribute("onclick", "AddTod("+colObj.id+");");
+  addBtn.setAttribute("onclick", "AddTex("+colObj.id+");");
   delColBtn.setAttribute("onclick", "DeleteCol("+colObj.id+");");
   colHeader.innerHTML = colObj.title;
   addBtn.innerHTML = "+";
@@ -205,7 +212,7 @@ function Load() {
   ClearCont();
 
   let colObjs = GetObj("colObjsJSON");
-  let todObjs = GetObj("objsJSON");
+  let innerObjs = GetObj("objsJSON");
 
   if(colObjs!==null){
     for(let i = 0; i<colObjs.length;i++){
@@ -214,9 +221,9 @@ function Load() {
     ResizeCont(colObjs.length);
   }
 
-  if(todObjs!==null){
-    for(let i = 0; i<todObjs.length;i++){
-      AppendTod(todObjs[i].column, CreateTod(todObjs[i]));
+  if(innerObjs!==null){
+    for(let i = 0; i<innerObjs.length;i++){
+      AppendTex(innerObjs[i].column, CreateTex(innerObjs[i]));
     }
   }
 
@@ -227,6 +234,7 @@ function DeleteCol(id) {
   
   let objs = GetObj("objsJSON");
   let colObjs = GetObj("colObjsJSON");
+
 
   if(objs !== null){
     for(let i = objs.length -1; i >= 0; i--){
@@ -273,7 +281,7 @@ function PostTest(objs){
   .catch((err) => { console.error("Error: ", err);});
 }
 
-function GetTest(){
+function GetColsTest(){
   fetch("http://localhost:3000/cols/",{
     method:"GET",
     header: {"Content-Type": "application/json"}})
@@ -296,5 +304,4 @@ window.addEventListener('keypress', () => { window.clearTimeout(saveTextTimeout)
 
 document.addEventListener("DOMContentLoaded", event => {
     Load();
-    GetTest();
   });

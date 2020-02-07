@@ -1,19 +1,20 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
-const app = express();
-const url = 'mongodb://127.0.0.1:27017/tod';
-const port = 3000;
+const   express = require('express'),
+        mongoose = require('mongoose'),
+        cors = require('cors'),
+        app = express(),
+        url = 'mongodb://127.0.0.1:27017/tod',
+        port = 3000;
 
 //import routes
-const colRoute = require('./routes/cols');
+const   colRoute = require('./routes/cols'),
+        texRoute = require('./routes/texs');
 
 //middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use('/cols', colRoute);
+app.use('/texs', texRoute);
 
 //connect to db
 mongoose.connect(url,{ 

@@ -63,4 +63,14 @@ router.patch('/:colId', async (req, res) => {
     }
 })
 
+//delete all
+router.delete('/', async (req, res) => {
+    try {
+        const removedCol = await Col.deleteMany();
+        res.json(removedCol);
+    } catch (err) {
+        res.json({message: err});
+    }
+});
+
 module.exports = router;

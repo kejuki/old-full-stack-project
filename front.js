@@ -1,11 +1,36 @@
 const content = document.getElementById("content");
 const container = document.getElementById("container");
 
-const getCols = fetch("http://localhost:3000/cols/",{
+async function getCols(){
+    const cols = await fetch("http://localhost:3000/cols/",{
     method:"GET",
     header: {"Content-Type": "application/json"}})
-    .then(res => res.json());
+    .then(res => res.json())
+    .catch(error => console.log(error));
+    return cols;
+}
 
+async function SetCol(obj){
+    await fetch("http://localhost:3000/cols/",{
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(obj)
+    })
+    .then((response) => response.json())
+    .catch((err) => { console.error("Error: ", err);});
+}
+
+async function DeleteObj(id){
+    await fetch("http://localhost:3000/cols/" + id,{
+      method: "DELETE"
+    })
+    .then(res => res.json())
+    .catch((err) => { console.error("Error: ", err);});
+    Load();
+}
 
 function SetObjId(objs) {
     if(objs!==null){
@@ -16,20 +41,22 @@ function SetObjId(objs) {
     return objs;
 }
 
-function AddCol() {
+async function AddCol() {
   
+    colObjs = await getCols();
+
     let colObj = {
       id: 0,
       title: ""
     }
   
-    try { SetObjId(getCols);} catch (e) {}
-    try { colObj.id = getCols.length; } catch (e) {}
+    try { SetObjId(colObjs);} catch (e) {}
+    try { colObj.id = colObjs.cols.length; } catch (e) {}
   
     CreateCol(colObj);
-    //StoreObj(colObj, "colObjsJSON");
+    await SetCol(colObj);
     
-    Load();
+    await Load();
 }
 
 function CreateCol(colObj) {
@@ -46,7 +73,7 @@ function CreateCol(colObj) {
     addBtn.classList.add("addbtn");
   
     addBtn.setAttribute("onclick", "AddTex("+colObj.id+");");
-    delColBtn.setAttribute("onclick", "DeleteCol("+colObj.id+");");
+    delColBtn.setAttribute("onclick", "DeleteObj("+colObj.id+");");
     colHeader.innerHTML = colObj.title;
     addBtn.innerHTML = "+";
     delColBtn.innerHTML = "-";
@@ -74,7 +101,7 @@ function ResizeCont(leng) {
 
 async function Load() {
 
-    let colObjs = await getCols;
+    let colObjs = await getCols();
     console.log(colObjs);
     ClearCont();
 
@@ -89,3 +116,13 @@ async function Load() {
 document.addEventListener("DOMContentLoaded", event => {
     Load();
 });
+
+//4dbuggin
+//DeleteAll();
+function DeleteAll(){
+    fetch("http://localhost:3000/cols/",{
+        method: "DELETE"
+      })
+      .then(res => res.json())
+      .then((data) => { console.log("Success: ", data);});
+}

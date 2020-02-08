@@ -25,10 +25,8 @@ router.get('/:colId', async (req, res) => {
 //submits a col
 router.post('/', async (req,res) => {
     const col = new Col({
-        id: req.body.id,
         title: req.body.title
     });
-    console.log("id: " + req.body.id);
     try{
     const savedCol = await col.save();
     res.json(savedCol);
@@ -40,7 +38,7 @@ router.post('/', async (req,res) => {
 //deletes a col
 router.delete('/:colId', async (req, res) => {
     try {
-        const removedCol = await Col.deleteOne({id: req.params.colId});
+        const removedCol = await Col.deleteOne({_id: req.params.colId});
         res.json(removedCol);
     } catch (err) {
         res.json({message: err});
@@ -53,24 +51,12 @@ router.patch('/:colId', async (req, res) => {
         const updatedCol = await Col.updateOne(
             { _id: req.params.colId }, 
             { $set: { 
-                title: req.body.title,
-                id: req.body.id 
+                title: req.body.title
             }});
-
         res.json(updatedCol);
     } catch (error) {
         res.json({message: err});
     }
 })
-
-//delete all
-router.delete('/', async (req, res) => {
-    try {
-        const removedCol = await Col.deleteMany();
-        res.json(removedCol);
-    } catch (err) {
-        res.json({message: err});
-    }
-});
 
 module.exports = router;

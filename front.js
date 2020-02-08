@@ -23,45 +23,49 @@ async function SetCol(obj){
     .catch((err) => { console.error("Error: ", err);});
 }
 
-async function DeleteObj(id){
+async function DeleteCol(id){
     await fetch("http://localhost:3000/cols/" + id,{
       method: "DELETE"
     })
     .then(res => res.json())
     .catch((err) => { console.error("Error: ", err);});
+
     Load();
 }
 
-function SetObjId(objs) {
-    if(objs!==null){
-      for(let i = 0; i<objs.length;i++){
-        objs[i].id = i;
-      }
-    }
-    return objs;
+async function UpdateText(text, id){
+    await fetch("http://localhost:3000/cols/" + id,{
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({title: text})
+    })
+    .then((response) => response.json())
+    .catch((err) => { console.error("Error: ", err);});
 }
 
 async function AddCol() {
-  
+
+    let colObjs = await getCols();
+    let colObj = {
+      title: "title"
+    }
+
+    try { colObj.id = colObjs.cols.length; } catch (e) {}
+
+    await SetCol(colObj);
     colObjs = await getCols();
 
-    let colObj = {
-      id: 0,
-      title: ""
-    }
-  
-    try { SetObjId(colObjs);} catch (e) {}
-    try { colObj.id = colObjs.cols.length; } catch (e) {}
-  
     CreateCol(colObj);
-    await SetCol(colObj);
     
-    await Load();
+    Load();
 }
 
 function CreateCol(colObj) {
     const col = document.createElement("div");
-    const colHeader = document.createElement("p");
+    const colHeader = document.createElement("textarea");
     const objCont = document.createElement("div");
     const delColBtn = document.createElement("Button");
     const addBtn = document.createElement("Button");
@@ -72,9 +76,10 @@ function CreateCol(colObj) {
     delColBtn.classList.add("delColBtn");
     addBtn.classList.add("addbtn");
   
-    addBtn.setAttribute("onclick", "AddTex("+colObj.id+");");
-    delColBtn.setAttribute("onclick", "DeleteObj("+colObj.id+");");
-    colHeader.innerHTML = colObj.title;
+    addBtn.setAttribute("onclick", "AddTex('"+colObj._id+"');");
+    delColBtn.setAttribute("onclick", "DeleteCol('"+colObj._id+"');");
+    colHeader.value = colObj.title;
+    colHeader.setAttribute("oninput","SetText(value, '"+colObj._id+"');");
     addBtn.innerHTML = "+";
     delColBtn.innerHTML = "-";
     
@@ -99,8 +104,12 @@ function ResizeCont(leng) {
     content.style.width = 324 * leng + 60 + "px";
 }
 
-async function Load() {
+let saveTextTimeout;
+function SetText(text, id){
+    saveTextTimeout = setTimeout(() => {UpdateText(text, id);}, 500);
+}
 
+async function Load() {
     let colObjs = await getCols();
     console.log(colObjs);
     ClearCont();
@@ -112,17 +121,10 @@ async function Load() {
         }
     }
 }
-  
-document.addEventListener("DOMContentLoaded", event => {
-    Load();
-});
 
-//4dbuggin
-//DeleteAll();
-function DeleteAll(){
-    fetch("http://localhost:3000/cols/",{
-        method: "DELETE"
-      })
-      .then(res => res.json())
-      .then((data) => { console.log("Success: ", data);});
-}
+//create a text changed method maybe
+window.addEventListener('keypress', () => { window.clearTimeout(saveTextTimeout);}, true);
+
+document.addEventListener("DOMContentLoaded", () => { Load(); });
+
+

@@ -65,7 +65,18 @@ button{
   margin: 1px 0px 1px 0px;
   background: #5e6c84;
 }
-textarea{
+.colHeader{
+  background: inherit;
+  color: inherit;
+  max-height: 14px;
+  border: none;
+  overflow: hidden;
+  resize:none;
+  min-width: 80%;
+  max-width: 80%;
+  min-height: 26px;
+}
+.todoinput{
   background: #5e6c84;
   color:inherit;
   border: none;

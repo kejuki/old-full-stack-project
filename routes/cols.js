@@ -57,6 +57,6 @@ router.patch('/:colId', async (req, res) => {
     } catch (error) {
         res.json({message: err});
     }
-})
+});
 
 module.exports = router;

@@ -1,0 +1,106 @@
+body{
+  background: black;
+  margin:0;
+  padding: 0;
+  border:0;
+  color:white;
+  overflow-x: show;
+  font-family:Arial, Helvetica, sans-serif;
+}
+p{
+  margin:0 1% 0 1%;
+}
+#container{
+  margin:auto;
+  min-width: 324px;
+  min-height: 100%;
+  float: left;
+}
+
+.col{
+  float: left;
+  width: 320px;
+  height: 100%;
+  margin:0 2px 4px 2px;
+  background: #2f3642;
+}
+.colHeader{
+  float:left;
+}
+.addBtn{
+  float:right;
+  margin: 1px 0px 1px 1px;
+}
+.delColBtn{
+  float: right;
+  margin: 1px 1px 1px 1px;
+}
+
+.listObj{
+  width: 320px;
+  float:left;
+  margin: 0;
+  background: #2f3642;
+  resize:none;
+  overflow: hidden;
+}
+.todotext{
+  float:left;
+}
+.fa-pencil-square-o{
+  display: inline-block;
+
+}
+.donebtn{
+  float:right;
+}
+.delbtn{
+  float:right;
+}
+button{
+  color:inherit;
+  border: none;
+  min-height: 28px;
+  min-width: 28px;
+  margin: 1px 0px 1px 0px;
+  background: #5e6c84;
+}
+.colHeader{
+  background: inherit;
+  color: inherit;
+  max-height: 14px;
+  border: none;
+  overflow: hidden;
+  resize:none;
+  min-width: 80%;
+  max-width: 80%;
+  min-height: 26px;
+}
+.todoinput{
+  background: #5e6c84;
+  color:inherit;
+  border: none;
+  min-height: 50px;
+  min-width: 286px;
+  margin: 1px 0px 1px 0px;
+  word-break: break-all;
+  resize:none;
+  overflow: hidden;
+  float: left;
+}
+::placeholder {
+  color: #2f3642;
+}
+#content{
+  min-width: 60px;
+  min-height: 100%;
+}
+
+#contAdd{
+  float:right;
+}
+#contAddBtn{
+  min-height: 58px;
+  min-width: 58px;
+  font-size: 44px;
+}

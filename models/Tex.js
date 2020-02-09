@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 const TextfieldSchema = mongoose.Schema({
-    id: Number,
-    column: Number,
+    column: String,
     title: String,
     text: String,
     done: Boolean,

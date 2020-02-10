@@ -1,13 +1,21 @@
-const content = document.getElementById("content");
 const leftcontainer = document.getElementById("left-container");
+const rightcontainer = document.getElementById("right-container");
 
 async function getCols(){
     const cols = await fetch("http://localhost:3000/cols/",{
-    method:"GET",
-    header: {"Content-Type": "application/json"}})
-    .then(res => res.json())
-    .catch(error => console.log(error));
+        method:"GET",
+        header: {"Content-Type": "application/json"}})
+        .then(res => res.json())
+        .catch(error => console.log(error));
     return cols;
+}
+async function getOne(url){
+    const obj = await fetch(url + id,{
+        method:"GET",
+        header: {"Content-Type": "application/json"}})
+        .then(res => res.json())
+        .catch(error => console.log(error));
+    return obj;
 }
 
 async function SetCol(obj){
@@ -59,42 +67,55 @@ async function AddCol() {
     colObjs = await getCols();
 
     CreateCol(colObj);
-    
+    CreateExpandableObj();
     Load();
 }
 
 function CreateCol(colObj) {
-    const col = document.createElement("div");
-    const colHeader = document.createElement("p");
-    const objCont = document.createElement("div");
-    const delColBtn = document.createElement("Button");
-    const addBtn = document.createElement("Button");
+    const   col = document.createElement("div"),
+            colHeader = document.createElement("p"),
+            delColBtn = document.createElement("Button"),
+            expandBtn = document.createElement("Button");
   
     col.classList.add("col");
     colHeader.classList.add("colHeader");
-    objCont.id = "col"+colObj.id;
-    delColBtn.classList.add("delColBtn");
-    addBtn.classList.add("addbtn");
-  
-    addBtn.setAttribute("onclick", "AddTex('"+colObj._id+"');");
-    delColBtn.setAttribute("onclick", "DeleteCol('"+colObj._id+"');");
+    delColBtn.classList.add("delColBtn", "fa", "fa-trash-o");
+    expandBtn.classList.add("expandBtn");
+
     colHeader.innerHTML = colObj.title;
+    delColBtn.setAttribute("onclick", "DeleteCol('"+colObj._id+"');");
+    expandBtn.setAttribute("oninput", "ExpandObj('"+colObj._id+"')");
     //colHeader.setAttribute("oninput","SetText(value, '"+colObj._id+"');");
-    addBtn.innerHTML = "+";
-    delColBtn.innerHTML = "-";
     
     col.appendChild(colHeader);
     col.appendChild(delColBtn);
-    col.appendChild(objCont);
-    col.appendChild(addBtn);
-  
+    col.appendChild(expandBtn);
+    
     leftcontainer.appendChild(col);
     return col;
 }
 
-function ClearCont(){
+function CreateAddBtn(){
+    const   addElement = document.createElement("div"),
+            addBtn = document.createElement("Button");
+
+    addElement.classList.add("contAdd");
+    addBtn.classList.add("fa", "fa-plus", "contAddBtn");
+    addBtn.setAttribute("onclick", "AddCol()");
+
+    addElement.appendChild(addBtn);
+    leftcontainer.appendChild(addElement);
+}
+
+function ClearLeftCont(){
     while (leftcontainer.firstChild){
         leftcontainer.removeChild(leftcontainer.firstChild);
+    }
+}
+
+function ClearRightCont(){
+    while (rightcontainer.firstChild){
+        rightcontainer.removeChild(rightcontainer.firstChild);
     }
 }
 
@@ -106,13 +127,24 @@ function SetText(text, id){
 async function Load() {
     let colObjs = await getCols();
     console.log(colObjs);
-    ClearCont();
+    ClearLeftCont();
 
     if(colObjs.cols!==null){
         for(const col in colObjs.cols){
             CreateCol(colObjs.cols[col]);
         }
     }
+    CreateAddBtn();
+}
+
+function CreateExpandableObj(){
+    return null;
+}
+
+function ExpandObj(id){
+    let obj = await getOne("http://localhost:3000/texs/", id);
+    console.log(obj);
+
 }
 
 //create a text changed method maybe

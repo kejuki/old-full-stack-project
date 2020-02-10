@@ -1,4 +1,3 @@
-
 body{
     min-height: 100%;
     background: rgb(20, 20, 20);
@@ -6,19 +5,26 @@ body{
     padding: 0;
     border:0;
     color:white;
-    overflow-x: show;
+    overflow: hidden;
     font-family:Arial, Helvetica, sans-serif;
 }
 #content{
     min-height: 100%;
+    display: flex;
 }
 #header{
-    border-bottom:2px solid rgb(255, 75, 0);
+    height: 20px;
+    border-bottom:2px solid rgb(255, 77, 0);
+    padding-left: 10px;
+}
+#right-container{
+    width: max-content;
+    float: left;
+    min-height: 100vh;
+    flex-grow: 100;
 }
 #left-container{
-    margin:auto;
-    width: 28%;
-    min-width: 256px;
+    width: 320px;
     min-height: 100vh;
     float: left;
     background-color: rgb(22, 22, 22);
@@ -28,7 +34,62 @@ body{
     float: left;
     min-width: 100%;
     border-bottom: 1px solid rgba(255, 75, 0, 0.4);
-    margin-right: 22px;
+    border-top: 1px solid rgba(255, 75, 0, 0.4);
+    max-height: 50px;
+    transition: 0.3s;
+}
+.col:hover{
+
+    border-bottom: 1px solid rgba(255, 75, 0, 1);
+    border-top: 1px solid rgba(255, 75, 0, 1);
+}
+.colHeader{
+    float: left;
+    padding-left: 10px;
+}
+
+button{
+    margin: 0 0 0 0;
+    background: inherit;
+    outline: none;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+button:hover {opacity: 1;}
+button:active{border: 0;}
+
+.delColBtn{
+    position: relative;
+    border: 0;
+    color:rgb(255, 75, 0);
+    float: right;
+    min-height: 50px;
+    min-width: 32px;
+}
+.expandBtn{
+    bottom: 50px;
+    height: 50px;
+    width: 288px;
+    z-index: 9999;
+    border: 1px;
+    position: relative;
+}
+.contAdd{
+    width: 50px;
+    height: 50px;
+    display: block;
+    margin:2px auto 0 auto;
+}
+.contAddBtn{
+    border: 0;
+    color:rgb(255, 75, 0);
+    width: 50px;
+    height: 50px;
+}
+#right-container{
+    float: left;
+    
+    
 }
 /* 
 rgb(20, 20, 20);

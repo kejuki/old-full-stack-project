@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/cols', colRoute);
 app.use('/texs', texRoute);
-app.use('/site', express.static('site'));
+app.use('/saitti', express.static('site'));
 
 //connect to db
 mongoose.connect(url,{ 

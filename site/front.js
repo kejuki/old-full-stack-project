@@ -1,5 +1,5 @@
 const content = document.getElementById("content");
-const container = document.getElementById("container");
+const leftcontainer = document.getElementById("left-container");
 
 async function getCols(){
     const cols = await fetch("http://localhost:3000/cols/",{
@@ -65,7 +65,7 @@ async function AddCol() {
 
 function CreateCol(colObj) {
     const col = document.createElement("div");
-    const colHeader = document.createElement("textarea");
+    const colHeader = document.createElement("p");
     const objCont = document.createElement("div");
     const delColBtn = document.createElement("Button");
     const addBtn = document.createElement("Button");
@@ -78,8 +78,8 @@ function CreateCol(colObj) {
   
     addBtn.setAttribute("onclick", "AddTex('"+colObj._id+"');");
     delColBtn.setAttribute("onclick", "DeleteCol('"+colObj._id+"');");
-    colHeader.value = colObj.title;
-    colHeader.setAttribute("oninput","SetText(value, '"+colObj._id+"');");
+    colHeader.innerHTML = colObj.title;
+    //colHeader.setAttribute("oninput","SetText(value, '"+colObj._id+"');");
     addBtn.innerHTML = "+";
     delColBtn.innerHTML = "-";
     
@@ -88,20 +88,14 @@ function CreateCol(colObj) {
     col.appendChild(objCont);
     col.appendChild(addBtn);
   
-    
-    container.appendChild(col);
+    leftcontainer.appendChild(col);
     return col;
 }
 
 function ClearCont(){
-    while (container.firstChild){
-      container.removeChild(container.firstChild);
+    while (leftcontainer.firstChild){
+        leftcontainer.removeChild(leftcontainer.firstChild);
     }
-}
-
-function ResizeCont(leng) {
-    container.style.width = 324 * leng + "px";
-    content.style.width = 324 * leng + 60 + "px";
 }
 
 let saveTextTimeout;
@@ -115,7 +109,6 @@ async function Load() {
     ClearCont();
 
     if(colObjs.cols!==null){
-        ResizeCont(colObjs.cols.length);
         for(const col in colObjs.cols){
             CreateCol(colObjs.cols[col]);
         }

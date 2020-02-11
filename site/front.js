@@ -58,8 +58,8 @@ async function AddCol() {
 
     let obj = {
       title: "title",
-      images: { imgurl:"url" },
-      texts: { text:"text" }
+      images: [],
+      texts: []
     }
     await SetCol(obj);
     Load();
@@ -134,8 +134,7 @@ async function Load() {
 async function ExpandObj(id){
     ClearRightCont();
     let obj = await getOne("http://localhost:3000/cols/", id);
-    console.log("expand: " + obj.images.imgurl);
-
+    //loop to make multiple txt area/img
 }
 
 //create a text changed method maybe

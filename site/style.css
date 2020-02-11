@@ -87,8 +87,15 @@ button:active{border: 0;}
     height: 50px;
 }
 #right-container{
-    float: left;
     
+}
+.expandedObjTitle{
+
+}
+.expandedObjImg{
+
+}
+.expandedObjtextarea{
     
 }
 /* 

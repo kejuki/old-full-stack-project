@@ -25,7 +25,9 @@ router.get('/:colId', async (req, res) => {
 //submits a col
 router.post('/', async (req,res) => {
     const col = new Col({
-        title: req.body.title
+        title: req.body.title,
+        images: req.body.images,
+        texts: req.body.texts,
     });
     try{
     const savedCol = await col.save();

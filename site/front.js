@@ -9,7 +9,7 @@ async function getCols(){
         .catch(error => console.log(error));
     return cols;
 }
-async function getOne(url){
+async function getOne(url, id){
     const obj = await fetch(url + id,{
         method:"GET",
         header: {"Content-Type": "application/json"}})
@@ -56,18 +56,12 @@ async function UpdateText(text, id){
 
 async function AddCol() {
 
-    let colObjs = await getCols();
-    let colObj = {
-      title: "title"
+    let obj = {
+      title: "title",
+      images: { imgurl:"url" },
+      texts: { text:"text" }
     }
-
-    try { colObj.id = colObjs.cols.length; } catch (e) {}
-
-    await SetCol(colObj);
-    colObjs = await getCols();
-
-    CreateCol(colObj);
-    CreateExpandableObj();
+    await SetCol(obj);
     Load();
 }
 
@@ -84,7 +78,7 @@ function CreateCol(colObj) {
 
     colHeader.innerHTML = colObj.title;
     delColBtn.setAttribute("onclick", "DeleteCol('"+colObj._id+"');");
-    expandBtn.setAttribute("oninput", "ExpandObj('"+colObj._id+"')");
+    expandBtn.setAttribute("onclick", "ExpandObj('"+colObj._id+"');");
     //colHeader.setAttribute("oninput","SetText(value, '"+colObj._id+"');");
     
     col.appendChild(colHeader);
@@ -137,13 +131,10 @@ async function Load() {
     CreateAddBtn();
 }
 
-function CreateExpandableObj(){
-    return null;
-}
-
-function ExpandObj(id){
-    let obj = await getOne("http://localhost:3000/texs/", id);
-    console.log(obj);
+async function ExpandObj(id){
+    ClearRightCont();
+    let obj = await getOne("http://localhost:3000/cols/", id);
+    console.log("expand: " + obj.images.imgurl);
 
 }
 

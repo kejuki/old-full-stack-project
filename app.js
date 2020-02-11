@@ -6,15 +6,13 @@ const   express = require('express'),
         port = 3000;
 
 //import routes
-const   colRoute = require('./routes/cols'),
-        texRoute = require('./routes/texs');
+const colRoute = require('./routes/cols');
 
 //middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use('/cols', colRoute);
-app.use('/texs', texRoute);
 app.use('/saitti', express.static('site'));
 
 //connect to db

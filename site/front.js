@@ -57,9 +57,9 @@ async function UpdateText(text, id){
 async function AddCol() {
 
     let obj = {
-      title: "title",
-      images: [],
-      texts: []
+        title: "title",
+        images: [{imgurl:"img/asdf.png", order: 0}, {imgurl:"img/asdf.png", order: 2}],
+        texts: [{text: "asdasd", order: 1}, {text: "asdasd", order: 3}]
     }
     await SetCol(obj);
     Load();
@@ -131,10 +131,37 @@ async function Load() {
     CreateAddBtn();
 }
 
+function CreateExpandableObj(obj){
+    const   expandableObj = document.createElement("div"),
+            expandedObjTitle = document.createElement("textarea"),
+            expandedObjCont = [];
+
+
+    expandedObjTitle.value = obj.title;
+    expandedObjTitle.classList.add("expandedObjTitle");
+
+    for(const cont in obj.images + obj.texts){
+        if(cont === obj.images[cont].order){
+            expandedObjCont.push(document.createElement("img"));
+            expandedObjCont[img].classList.add("expandedObjImg");
+            expandedObjCont[img].setAttribute("src", "http://localhost:3000/saitti/" + obj.images[img]);
+        }
+        if(cont === obj.texts[cont].order){
+            expandedObjtextarea.push(document.createElement("textarea"));
+            expandedObjtextarea[text].classList.add("expandedObjtextarea");
+            expandedObjtextarea[text].value = obj.texts[text];
+        }
+    }
+
+    expandableObj.appendChild(expandedObjTitle);
+    
+}
 async function ExpandObj(id){
-    ClearRightCont();
+
+    ClearRightCont();//this last after new content is ready
     let obj = await getOne("http://localhost:3000/cols/", id);
-    //loop to make multiple txt area/img
+    console.log(obj.images);
+    CreateExpandableObj(obj);
 }
 
 //create a text changed method maybe

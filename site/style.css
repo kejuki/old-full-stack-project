@@ -10,7 +10,7 @@ body{
 }
 #content{
     min-height: 100%;
-    display: flex;
+
 }
 #header{
     height: 20px;
@@ -87,16 +87,33 @@ button:active{border: 0;}
     height: 50px;
 }
 #right-container{
-    
+    float: left;
+}
+.expandedObjTitle,
+.expandedObjImg,
+.expandedObjtextarea{
+    margin: 20px 0 0 20px;
+    float: inherit;
+    min-width: 90%;
+    border: 1px solid rgb(255, 75, 0);
+    background: inherit;
+    color:inherit;
 }
 .expandedObjTitle{
-
+    word-break: break-all;
+    resize:none;
+    overflow: hidden;
+    font-size: 24px;
 }
 .expandedObjImg{
 
 }
 .expandedObjtextarea{
-    
+    height: 28px;
+    width: 80%;
+    word-break: break-all;
+    resize:none;
+    overflow: hidden;
 }
 /* 
 rgb(20, 20, 20);

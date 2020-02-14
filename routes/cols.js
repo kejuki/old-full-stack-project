@@ -26,8 +26,7 @@ router.get('/:colId', async (req, res) => {
 router.post('/', async (req,res) => {
     const col = new Col({
         title: req.body.title,
-        images: req.body.images,
-        texts: req.body.texts,
+        content: req.body.content
     });
     try{
     const savedCol = await col.save();
@@ -53,7 +52,8 @@ router.patch('/:colId', async (req, res) => {
         const updatedCol = await Col.updateOne(
             { _id: req.params.colId }, 
             { $set: { 
-                title: req.body.title
+                title: req.body.title,
+                content: [{order: req.body.order, text: req.body.text}]
             }});
         res.json(updatedCol);
     } catch (error) {

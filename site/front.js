@@ -58,8 +58,12 @@ async function AddCol() {
 
     let obj = {
         title: "title",
-        images: [{imgurl:"img/asdf.png", order: 0}, {imgurl:"img/asdf.png", order: 2}],
-        texts: [{text: "asdasd", order: 1}, {text: "asdasd", order: 3}]
+        content: [
+            {type: "img", imgurl:"img/asdf.png", order: 0}, 
+            {type: "text", text: "asdasd", order: 3},
+            {type: "img", imgurl:"img/asdf.png", order: 2}, 
+            {type: "text", text: "asdasd", order: 1}
+        ]
     }
     await SetCol(obj);
     Load();
@@ -86,7 +90,6 @@ function CreateCol(colObj) {
     col.appendChild(expandBtn);
     
     leftcontainer.appendChild(col);
-    return col;
 }
 
 function CreateAddBtn(){
@@ -132,35 +135,34 @@ async function Load() {
 }
 
 function CreateExpandableObj(obj){
-    const   expandableObj = document.createElement("div"),
-            expandedObjTitle = document.createElement("textarea"),
-            expandedObjCont = [];
-
+    const expandedObjTitle = document.createElement("textarea");
+    let expandedObjCont = [];
 
     expandedObjTitle.value = obj.title;
     expandedObjTitle.classList.add("expandedObjTitle");
+    rightcontainer.appendChild(expandedObjTitle);
 
-    for(const cont in obj.images + obj.texts){
-        if(cont === obj.images[cont].order){
+    obj.content.sort((a, b) => {return a.order - b.order});
+
+    for(const cont in obj.content){
+        if(obj.content[cont].type === "text"){
+            expandedObjCont.push(document.createElement("textarea"));
+            expandedObjCont[cont].classList.add("expandedObjtextarea");
+            expandedObjCont[cont].value = obj.content[cont].text;
+            //setattribute for save
+        }
+        if(obj.content[cont].type === "img"){
             expandedObjCont.push(document.createElement("img"));
-            expandedObjCont[img].classList.add("expandedObjImg");
-            expandedObjCont[img].setAttribute("src", "http://localhost:3000/saitti/" + obj.images[img]);
+            expandedObjCont[cont].classList.add("expandedObjImg");
+            expandedObjCont[cont].setAttribute("src", "http://localhost:3000/saitti/" + obj.content[cont].imgurl);
         }
-        if(cont === obj.texts[cont].order){
-            expandedObjtextarea.push(document.createElement("textarea"));
-            expandedObjtextarea[text].classList.add("expandedObjtextarea");
-            expandedObjtextarea[text].value = obj.texts[text];
-        }
+        rightcontainer.appendChild(expandedObjCont[cont]);
     }
-
-    expandableObj.appendChild(expandedObjTitle);
-    
 }
-async function ExpandObj(id){
 
-    ClearRightCont();//this last after new content is ready
+async function ExpandObj(id){
     let obj = await getOne("http://localhost:3000/cols/", id);
-    console.log(obj.images);
+    ClearRightCont();
     CreateExpandableObj(obj);
 }
 

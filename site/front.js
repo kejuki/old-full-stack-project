@@ -40,7 +40,7 @@ async function DeleteCol(id){
 
     Load();
 }
-
+//colid form actionssii
 async function UpdateText(obj){
     await fetch("http://localhost:3000/cols/" +obj.type+ "/" +obj.id,{
         method: 'PATCH',

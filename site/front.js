@@ -41,28 +41,17 @@ async function DeleteCol(id){
     Load();
 }
 
-async function UpdateTitle(text, id){
-    await fetch("http://localhost:3000/cols/" + id,{
+async function UpdateText(obj){
+    await fetch("http://localhost:3000/cols/" +obj.type+ "/" +obj.id,{
         method: 'PATCH',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({title: text})
+        body: JSON.stringify(obj.content)
     })
     .then((response) => response.json())
-    .catch((err) => { console.error("Error: ", err);});
-}
-
-async function DeleteContObj(id, subid){//first reorder cont then patch then delete
-    await fetch("http://localhost:3000/cols/" + id + "." + subid,{
-        method: 'PATCH',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-    })
-    .then((response) => response.json())
+    .then(Load())
     .catch((err) => { console.error("Error: ", err);});
 }
 
@@ -125,12 +114,8 @@ function ClearRightCont(){
 }
 
 let saveTextTimeout;
-function SetText(text, id, order){
-    saveTextTimeout = setTimeout(() => {UpdateText(text, id, order);}, 500);
-}
-let saveTitleTimeout;
-function SetTitle(text, id){
-    saveTextTimeout = setTimeout(() => {UpdateTitle(text, id);}, 500);
+function SetText(obj){
+    saveTextTimeout = setTimeout(() => {UpdateText(obj);}, 500);
 }
 
 async function Load() {
@@ -156,7 +141,7 @@ function CreateExpandableObj(obj){
 
     expandObjTitle.value = obj.title;
     expandObjTitle.classList.add("expandedObjTitle");
-    expandObjTitle.setAttribute("oninput","SetTitle(value, '"+obj._id+"');");
+    expandObjTitle.setAttribute("oninput","SetText({content: {title: value}, type: 'title', id: '"+obj._id+"'});");
 
     imgspace.classList.add("expandedObjImg");
     img.setAttribute("src", "http://localhost:3000/saitti/" + obj.imgurl);
@@ -165,7 +150,7 @@ function CreateExpandableObj(obj){
     
     textarea.classList.add("expandedObjtextarea");
     textarea.value = obj.texts;
-    textarea.setAttribute("oninput","SetText(value, '"+obj._id+"');");
+    textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'});");
     
     rightcontainer.appendChild(expandObjTitle);
     rightcontainer.appendChild(imgspace);
@@ -179,10 +164,8 @@ async function ExpandObj(id){
     CreateExpandableObj(obj);
 }
 
-//create a text changed method maybe
 window.addEventListener('keypress', () => {
      window.clearTimeout(saveTextTimeout);
-     window.clearTimeout(saveTitleTimeout);
 }, true);
 
 document.addEventListener("DOMContentLoaded", () => { Load(); });

@@ -47,18 +47,29 @@ router.delete('/:colId', async (req, res) => {
 });
 
 //update a col
-router.patch('/:colId', async (req, res) => {
+router.patch('/a/:colId', async (req, res) => {
     try {
         const updatedCol = await Col.updateOne(
             { _id: req.params.colId }, 
             { $set: { 
-                title: req.body.title,
-                content: [{order: req.body.order, text: req.body.text}]
+                title: req.body.title
             }});
         res.json(updatedCol);
     } catch (error) {
-        res.json({message: err});
+        console.log(error);
     }
 });
-
+router.patch('/:colId-:subId', async (req, res) => {
+    console.log(req.param.colId);
+    try {
+        const updatedCol = await Col.updateOne(
+            { _id: req.params.colId }, 
+            { $pullAll: { 
+                _id: [req.param.subId]
+            }});
+        res.json(updatedCol);
+    } catch (error) {
+        console.log(error);
+    }
+});
 module.exports = router;

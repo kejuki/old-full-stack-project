@@ -41,7 +41,7 @@ async function DeleteCol(id){
     Load();
 }
 
-async function UpdateText(text, id){
+async function UpdateTitle(text, id){
     await fetch("http://localhost:3000/cols/" + id,{
         method: 'PATCH',
         headers: {
@@ -54,16 +54,24 @@ async function UpdateText(text, id){
     .catch((err) => { console.error("Error: ", err);});
 }
 
+async function DeleteContObj(id, subid){//first reorder cont then patch then delete
+    await fetch("http://localhost:3000/cols/" + id + "." + subid,{
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => response.json())
+    .catch((err) => { console.error("Error: ", err);});
+}
+
 async function AddCol() {
 
     let obj = {
         title: "title",
-        content: [
-            {type: "img", imgurl:"img/asdf.png", order: 0}, 
-            {type: "text", text: "asdasd", order: 3},
-            {type: "img", imgurl:"img/asdf.png", order: 2}, 
-            {type: "text", text: "asdasd", order: 1}
-        ]
+        imgurl: "img/asdf.png",
+        texts: ""
     }
     await SetCol(obj);
     Load();
@@ -117,8 +125,12 @@ function ClearRightCont(){
 }
 
 let saveTextTimeout;
-function SetText(text, id){
-    saveTextTimeout = setTimeout(() => {UpdateText(text, id);}, 500);
+function SetText(text, id, order){
+    saveTextTimeout = setTimeout(() => {UpdateText(text, id, order);}, 500);
+}
+let saveTitleTimeout;
+function SetTitle(text, id){
+    saveTextTimeout = setTimeout(() => {UpdateTitle(text, id);}, 500);
 }
 
 async function Load() {
@@ -135,29 +147,30 @@ async function Load() {
 }
 
 function CreateExpandableObj(obj){
-    const expandedObjTitle = document.createElement("textarea");
-    let expandedObjCont = [];
+    const expandObjTitle = document.createElement("textarea"),
+        textarea = document.createElement("textarea"),
+        imgspace = document.createElement("div"),
+        img = document.createElement("img"),
+        addImgBtn = document.createElement("button");
 
-    expandedObjTitle.value = obj.title;
-    expandedObjTitle.classList.add("expandedObjTitle");
-    rightcontainer.appendChild(expandedObjTitle);
 
-    obj.content.sort((a, b) => {return a.order - b.order});
+    expandObjTitle.value = obj.title;
+    expandObjTitle.classList.add("expandedObjTitle");
+    expandObjTitle.setAttribute("oninput","SetTitle(value, '"+obj._id+"');");
 
-    for(const cont in obj.content){
-        if(obj.content[cont].type === "text"){
-            expandedObjCont.push(document.createElement("textarea"));
-            expandedObjCont[cont].classList.add("expandedObjtextarea");
-            expandedObjCont[cont].value = obj.content[cont].text;
-            //setattribute for save
-        }
-        if(obj.content[cont].type === "img"){
-            expandedObjCont.push(document.createElement("img"));
-            expandedObjCont[cont].classList.add("expandedObjImg");
-            expandedObjCont[cont].setAttribute("src", "http://localhost:3000/saitti/" + obj.content[cont].imgurl);
-        }
-        rightcontainer.appendChild(expandedObjCont[cont]);
-    }
+    imgspace.classList.add("expandedObjImg");
+    img.setAttribute("src", "http://localhost:3000/saitti/" + obj.imgurl);
+    imgspace.appendChild(img);
+    imgspace.appendChild(addImgBtn);
+    
+    textarea.classList.add("expandedObjtextarea");
+    textarea.value = obj.texts;
+    textarea.setAttribute("oninput","SetText(value, '"+obj._id+"');");
+    
+    rightcontainer.appendChild(expandObjTitle);
+    rightcontainer.appendChild(imgspace);
+    rightcontainer.appendChild(textarea);
+
 }
 
 async function ExpandObj(id){
@@ -167,7 +180,10 @@ async function ExpandObj(id){
 }
 
 //create a text changed method maybe
-window.addEventListener('keypress', () => { window.clearTimeout(saveTextTimeout);}, true);
+window.addEventListener('keypress', () => {
+     window.clearTimeout(saveTextTimeout);
+     window.clearTimeout(saveTitleTimeout);
+}, true);
 
 document.addEventListener("DOMContentLoaded", () => { Load(); });
 

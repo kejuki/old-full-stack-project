@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const ColSchema = mongoose.Schema({
     title: String,
-    content: Array
+    imgurl: String,
+    texts: String
 }, {versionKey: false
 });
 

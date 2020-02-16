@@ -32,7 +32,7 @@ router.post('/', async (req,res) => {
     try{
     const savedCol = await col.save();
     res.json(savedCol);
-    }catch(err){
+    }catch(err){ 
         res.json({message: err});
     }
 });

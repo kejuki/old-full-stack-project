@@ -10,6 +10,16 @@ const   express = require('express'),
 //import routes
 const colRoute = require('./routes/cols');
 
+//connect to db
+mongoose.connect(url,{ 
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+    },
+    () => {
+        console.log("connected to db");
+    }
+);
+
 //storage engine
 const storage = multer.diskStorage({
     destination: './site/img',
@@ -36,21 +46,10 @@ app.post('/upload', (req,res) => {
     upload(req, res, (err) => {
         if(err) { console.log(err)}
         else{
-            res.redirect('/saitti')
+            res.redirect('/saitti/')
             console.log(req.file.filename);
         }
     });
 });
-
-//connect to db
-mongoose.connect(url,{ 
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-    },
-    () => {
-        console.log("connected to db");
-    }
-);
-
 
 app.listen(port);

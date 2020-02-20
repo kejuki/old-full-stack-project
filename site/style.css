@@ -117,6 +117,10 @@ button:active{border: 0;}
     overflow: hidden;
     background-color: rgb(24, 24, 24);
 }
+.formBtn{
+    min-width: 20px;
+    min-height: 20px;
+}
 /* 
 rgb(20, 20, 20);
 rgb(255, 75, 0) 

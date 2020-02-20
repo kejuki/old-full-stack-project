@@ -55,11 +55,28 @@ async function UpdateText(obj){
     .catch((err) => { console.error("Error: ", err);});
 }
 
+async function UploadImage(ev){
+    ev.preventDefault();
+
+    const inpFile = document.getElementById("selectImg");
+    const fd = new FormData();
+    const id = document.getElementById("idelem").value;
+    fd.append("myImage", inpFile.files[0]);
+
+    await fetch("http://localhost:3000/cols/upload/" + id, {
+        method: "POST",
+        body: fd
+    })
+    .then((response) => response.json())
+    .then(setTimeout(() => {ExpandObj(id);}, 2000))
+    .catch((err) => console.log(err));
+}
+
 async function AddCol() {
 
     let obj = {
         title: "title",
-        imgurl: "img/asdf.png",
+        imgurl: "",
         texts: ""
     }
     await SetCol(obj);
@@ -136,22 +153,51 @@ function CreateExpandableObj(obj){
         textarea = document.createElement("textarea"),
         imgspace = document.createElement("div"),
         img = document.createElement("img"),
-        addImgBtn = document.createElement("button");
+        addImgForm = document.createElement("form"),
+        idelem = document.createElement("input"),
+        selectImgBtn = document.createElement("input"),
+        submitImgBtn = document.createElement("button");
 
 
+    //creating the title area
     expandObjTitle.value = obj.title;
     expandObjTitle.classList.add("expandedObjTitle");
     expandObjTitle.setAttribute("oninput","SetText({content: {title: value}, type: 'title', id: '"+obj._id+"'});");
 
+    //loading the image
+    img.id = "imgelement";
     imgspace.classList.add("expandedObjImg");
-    img.setAttribute("src", "http://localhost:3000/saitti/" + obj.imgurl);
+    obj.imgurl != "" ? img.setAttribute("src", "http://localhost:3000/" + obj.imgurl) : null;
     imgspace.appendChild(img);
-    imgspace.appendChild(addImgBtn);
+
+    //creating the image upload form
+    addImgForm.id = "objid";
+
+    idelem.setAttribute("type", "hidden");
+    idelem.id = "idelem";
+    idelem.value = obj._id;
+
+    selectImgBtn.setAttribute("name", "myImage");
+    selectImgBtn.setAttribute("type", "file");
+    selectImgBtn.setAttribute("accept", "image/*");
+    selectImgBtn.classList.add("formBtn");
+    selectImgBtn.id = "selectImg";
+
+    submitImgBtn.setAttribute("type", "submit");
+    submitImgBtn.addEventListener("click", UploadImage);
+    submitImgBtn.classList.add("formBtn");
+
+    imgspace.appendChild(addImgForm);
+    addImgForm.appendChild(idelem);
+    addImgForm.appendChild(selectImgBtn);
+    addImgForm.appendChild(submitImgBtn);
     
+    //creting the textarea
     textarea.classList.add("expandedObjtextarea");
     textarea.value = obj.texts;
     textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'});");
     
+    //appending elements to the container
     rightcontainer.appendChild(expandObjTitle);
     rightcontainer.appendChild(imgspace);
     rightcontainer.appendChild(textarea);

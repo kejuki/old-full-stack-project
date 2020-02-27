@@ -61,15 +61,19 @@ async function UploadImage(ev){
     const inpFile = document.getElementById("selectImg");
     const fd = new FormData();
     const id = document.getElementById("idelem").value;
-    fd.append("myImage", inpFile.files[0]);
+    if(inpFile.files[0] === undefined){
+        alert("choose an image to submit");
+    }else{
+        fd.append("myImage", inpFile.files[0]);
 
-    await fetch("http://localhost:3000/cols/upload/" + id, {
-        method: "POST",
-        body: fd
-    })
-    .then((response) => response.json())
-    .then(setTimeout(() => {ExpandObj(id);}, 2000))
-    .catch((err) => console.log(err));
+        await fetch("http://localhost:3000/cols/upload/" + id, {
+            method: "POST",
+            body: fd
+        })
+        .then((response) => response.json())
+        .then(setTimeout(() => {RefreshImgSpace(id);}, 2000))
+        .catch((err) => console.log(err));
+    }
 }
 
 async function AddCol() {
@@ -171,7 +175,7 @@ function CreateExpandableObj(obj){
     imgspace.appendChild(img);
 
     //creating the image upload form
-    addImgForm.id = "objid";
+    addImgForm.id = "imgForm";
 
     idelem.setAttribute("type", "hidden");
     idelem.id = "idelem";
@@ -187,7 +191,6 @@ function CreateExpandableObj(obj){
     submitImgBtn.addEventListener("click", UploadImage);
     submitImgBtn.classList.add("formBtn");
 
-    imgspace.appendChild(addImgForm);
     addImgForm.appendChild(idelem);
     addImgForm.appendChild(selectImgBtn);
     addImgForm.appendChild(submitImgBtn);
@@ -200,14 +203,24 @@ function CreateExpandableObj(obj){
     //appending elements to the container
     rightcontainer.appendChild(expandObjTitle);
     rightcontainer.appendChild(imgspace);
+    rightcontainer.appendChild(addImgForm);
     rightcontainer.appendChild(textarea);
 
 }
 
 async function ExpandObj(id){
-    let obj = await getOne("http://localhost:3000/cols/", id);
+    const obj = await getOne("http://localhost:3000/cols/", id);
     ClearRightCont();
     CreateExpandableObj(obj);
+}
+
+async function RefreshImgSpace(id){
+    const obj = await getOne("http://localhost:3000/cols/", id);
+    const img = document.createElement("img");
+    expandedObjImg = document.getElementsByClassName("expandedObjImg")[0];
+    expandedObjImg.firstChild ? expandedObjImg.removeChild(expandedObjImg.firstChild) : null;
+    obj.imgurl != "" ? img.setAttribute("src", "http://localhost:3000/" + obj.imgurl) : null;
+    expandedObjImg.appendChild(img);
 }
 
 window.addEventListener('keypress', () => {

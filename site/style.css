@@ -89,7 +89,8 @@ button:active{border: 0;}
 }
 .expandedObjTitle,
 .expandedObjImg,
-.expandedObjtextarea{
+.expandedObjtextarea,
+#imgForm{
     margin: 20px auto 0 auto;
     display: block;
     border: 0;

@@ -51,19 +51,7 @@ router.post('/', async (req,res) => {
         res.json({message: err});
     }
 });
-//upload img
-router.post('/upload/:id', upload.single("myImage"), async (req,res) => {
-    try {
-        const updatedCol = await Col.updateOne(
-            { _id: req.params.id }, 
-            { $set: { 
-                imgurl: req.file.path
-            }});
-        res.json(updatedCol);
-    } catch (error) {
-        console.log(error);
-    }
-});
+
 //deletes a col
 router.delete('/:colId', async (req, res) => {
     try {
@@ -99,4 +87,19 @@ router.patch('/title/:colId', async (req, res) => {
         console.log(error);
     }
 });
+
+//upload img
+router.post('/upload/:id', upload.single("myImage"), async (req,res) => {
+    try {
+        const updatedCol = await Col.updateOne(
+            { _id: req.params.id }, 
+            { $set: { 
+                imgurl: req.file.path
+            }});
+        res.json(updatedCol);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 module.exports = router;

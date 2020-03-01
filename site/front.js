@@ -1,15 +1,17 @@
 const leftcontainer = document.getElementById("left-container");
 const rightcontainer = document.getElementById("right-container");
+const url = "http://localhost:3000/cols/";
 
-async function getCols(){
-    const cols = await fetch("http://localhost:3000/cols/",{
+async function GetAllObjs(){
+    const objs = await fetch(url,{
         method:"GET",
         header: {"Content-Type": "application/json"}})
         .then(res => res.json())
         .catch(error => console.log(error));
-    return cols;
+    return objs;
 }
-async function getOne(url, id){
+
+async function GetOne(id){
     const obj = await fetch(url + id,{
         method:"GET",
         header: {"Content-Type": "application/json"}})
@@ -19,7 +21,7 @@ async function getOne(url, id){
 }
 
 async function SetCol(obj){
-    await fetch("http://localhost:3000/cols/",{
+    await fetch(url,{
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -27,12 +29,12 @@ async function SetCol(obj){
         },
         body: JSON.stringify(obj)
     })
-    .then((response) => response.json())
+    .then((res) => res.json())
     .catch((err) => { console.error("Error: ", err);});
 }
 
-async function DeleteCol(id){
-    await fetch("http://localhost:3000/cols/" + id,{
+async function DeleteItem(id){
+    await fetch(url + id,{
       method: "DELETE"
     })
     .then(res => res.json())
@@ -42,7 +44,7 @@ async function DeleteCol(id){
 }
 //colid form actionssii
 async function UpdateText(obj){
-    await fetch("http://localhost:3000/cols/" +obj.type+ "/" +obj.id,{
+    await fetch(url + obj.type + "/" + obj.id,{
         method: 'PATCH',
         headers: {
           'Accept': 'application/json',
@@ -50,7 +52,7 @@ async function UpdateText(obj){
         },
         body: JSON.stringify(obj.content)
     })
-    .then((response) => response.json())
+    .then((res) => res.json())
     .then(Load())
     .catch((err) => { console.error("Error: ", err);});
 }
@@ -66,17 +68,17 @@ async function UploadImage(ev){
     }else{
         fd.append("myImage", inpFile.files[0]);
 
-        await fetch("http://localhost:3000/cols/upload/" + id, {
+        await fetch(url + "upload/" + id, {
             method: "POST",
             body: fd
         })
-        .then((response) => response.json())
+        .then((res) => res.json())
         .then(setTimeout(() => {RefreshImgSpace(id);}, 2000))
         .catch((err) => console.log(err));
     }
 }
 
-async function AddCol() {
+async function AddItem() {
 
     let obj = {
         title: "title",
@@ -87,36 +89,35 @@ async function AddCol() {
     Load();
 }
 
-function CreateCol(colObj) {
-    const   col = document.createElement("div"),
-            colHeader = document.createElement("p"),
-            delColBtn = document.createElement("Button"),
-            expandBtn = document.createElement("Button");
+function CreateListItem(obj) {
+    const listItem = document.createElement("div"),
+    listItemHeader = document.createElement("p"),
+    delListItemBtn = document.createElement("Button"),
+    expandBtn = document.createElement("Button");
   
-    col.classList.add("col");
-    colHeader.classList.add("colHeader");
-    delColBtn.classList.add("delColBtn", "fa", "fa-trash-o");
+    listItem.classList.add("col");
+    listItemHeader.classList.add("colHeader");
+    delListItemBtn.classList.add("delColBtn", "fa", "fa-trash-o");
     expandBtn.classList.add("expandBtn");
 
-    colHeader.innerHTML = colObj.title;
-    delColBtn.setAttribute("onclick", "DeleteCol('"+colObj._id+"');");
-    expandBtn.setAttribute("onclick", "ExpandObj('"+colObj._id+"');");
-    //colHeader.setAttribute("oninput","SetText(value, '"+colObj._id+"');");
+    listItemHeader.innerHTML = obj.title;
+    delListItemBtn.setAttribute("onclick", "DeleteItem('"+obj._id+"');");
+    expandBtn.setAttribute("onclick", "ExpandItem('"+obj._id+"');");
     
-    col.appendChild(colHeader);
-    col.appendChild(delColBtn);
-    col.appendChild(expandBtn);
+    listItem.appendChild(listItemHeader);
+    listItem.appendChild(delListItemBtn);
+    listItem.appendChild(expandBtn);
     
-    leftcontainer.appendChild(col);
+    leftcontainer.appendChild(listItem);
 }
 
 function CreateAddBtn(){
-    const   addElement = document.createElement("div"),
-            addBtn = document.createElement("Button");
+    const addElement = document.createElement("div"),
+    addBtn = document.createElement("Button");
 
     addElement.classList.add("contAdd");
     addBtn.classList.add("fa", "fa-plus", "contAddBtn");
-    addBtn.setAttribute("onclick", "AddCol()");
+    addBtn.setAttribute("onclick", "AddItem()");
 
     addElement.appendChild(addBtn);
     leftcontainer.appendChild(addElement);
@@ -140,13 +141,13 @@ function SetText(obj){
 }
 
 async function Load() {
-    let colObjs = await getCols();
-    console.log(colObjs);
+    let objs = await GetAllObjs();
+
     ClearLeftCont();
 
-    if(colObjs.cols!==null){
-        for(const col in colObjs.cols){
-            CreateCol(colObjs.cols[col]);
+    if(objs.cols!==null){
+        for(const col in objs.cols){
+            CreateListItem(objs.cols[col]);
         }
     }
     CreateAddBtn();
@@ -208,14 +209,14 @@ function CreateExpandableObj(obj){
 
 }
 
-async function ExpandObj(id){
-    const obj = await getOne("http://localhost:3000/cols/", id);
+async function ExpandItem(id){
+    const obj = await GetOne(id);
     ClearRightCont();
     CreateExpandableObj(obj);
 }
 
 async function RefreshImgSpace(id){
-    const obj = await getOne("http://localhost:3000/cols/", id);
+    const obj = await GetOne(id);
     const img = document.createElement("img");
     expandedObjImg = document.getElementsByClassName("expandedObjImg")[0];
     expandedObjImg.firstChild ? expandedObjImg.removeChild(expandedObjImg.firstChild) : null;
@@ -228,5 +229,3 @@ window.addEventListener('keypress', () => {
 }, true);
 
 document.addEventListener("DOMContentLoaded", () => { Load(); });
-
-

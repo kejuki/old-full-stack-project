@@ -40,9 +40,10 @@ async function DeleteItem(id){
     .then(res => res.json())
     .catch((err) => { console.error("Error: ", err);});
 
+    document.getElementById("idelem").value === id ? ClearRightCont() : null;
     Load();
 }
-//colid form actionssii
+
 async function UpdateText(obj){
     await fetch(url + obj.type + "/" + obj.id,{
         method: 'PATCH',
@@ -66,7 +67,7 @@ async function UploadImage(ev){
     if(inpFile.files[0] === undefined){
         alert("choose an image to submit");
     }else{
-        fd.append("myImage", inpFile.files[0]);
+        fd.append("img", inpFile.files[0]);
 
         await fetch(url + "upload/" + id, {
             method: "POST",
@@ -155,13 +156,13 @@ async function Load() {
 
 function CreateExpandableObj(obj){
     const expandObjTitle = document.createElement("textarea"),
-        textarea = document.createElement("textarea"),
-        imgspace = document.createElement("div"),
-        img = document.createElement("img"),
-        addImgForm = document.createElement("form"),
-        idelem = document.createElement("input"),
-        selectImgBtn = document.createElement("input"),
-        submitImgBtn = document.createElement("button");
+    textarea = document.createElement("textarea"),
+    imgspace = document.createElement("div"),
+    img = document.createElement("img"),
+    addImgForm = document.createElement("form"),
+    idelem = document.createElement("input"),
+    selectImgBtn = document.createElement("input"),
+    submitImgBtn = document.createElement("button");
 
 
     //creating the title area
@@ -182,7 +183,7 @@ function CreateExpandableObj(obj){
     idelem.id = "idelem";
     idelem.value = obj._id;
 
-    selectImgBtn.setAttribute("name", "myImage");
+    selectImgBtn.setAttribute("name", "img");
     selectImgBtn.setAttribute("type", "file");
     selectImgBtn.setAttribute("accept", "image/*");
     selectImgBtn.classList.add("formBtn");
@@ -196,10 +197,12 @@ function CreateExpandableObj(obj){
     addImgForm.appendChild(selectImgBtn);
     addImgForm.appendChild(submitImgBtn);
     
-    //creting the textarea
+    //creating the textarea
     textarea.classList.add("expandedObjtextarea");
     textarea.value = obj.texts;
-    textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'});");
+    textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'});" 
+        +'this.style.height = "";' 
+        +'this.style.height = this.scrollHeight + "px"');
     
     //appending elements to the container
     rightcontainer.appendChild(expandObjTitle);
@@ -209,10 +212,19 @@ function CreateExpandableObj(obj){
 
 }
 
+function ResizeTextarea() {
+    let tae = document.getElementsByClassName("expandedObjtextarea");
+    let ta = Array.from(tae);
+    ta.forEach((ta) => {
+      ta.style.height = ta.scrollHeight + "px";
+    })
+}
+
 async function ExpandItem(id){
     const obj = await GetOne(id);
     ClearRightCont();
     CreateExpandableObj(obj);
+    ResizeTextarea();
 }
 
 async function RefreshImgSpace(id){

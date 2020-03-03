@@ -89,7 +89,7 @@ router.patch('/title/:colId', async (req, res) => {
 });
 
 //upload img
-router.post('/upload/:id', upload.single("myImage"), async (req,res) => {
+router.post('/upload/:id', upload.single("img"), async (req,res) => {
     try {
         const updatedCol = await Col.updateOne(
             { _id: req.params.id }, 

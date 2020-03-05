@@ -1,6 +1,6 @@
 const leftcontainer = document.getElementById("left-container");
 const rightcontainer = document.getElementById("right-container");
-const url = "http://localhost:3000/cols/";
+const url = "http://localhost:3000/listItems/";
 
 async function GetAllObjs(){
     const objs = await fetch(url,{
@@ -20,7 +20,7 @@ async function GetOne(id){
     return obj;
 }
 
-async function SetCol(obj){
+async function SetObj(obj){
     await fetch(url,{
         method: 'POST',
         headers: {
@@ -40,7 +40,12 @@ async function DeleteItem(id){
     .then(res => res.json())
     .catch((err) => { console.error("Error: ", err);});
 
-    document.getElementById("idelem").value === id ? ClearRightCont() : null;
+    try {
+        document.getElementById("idelem").value === id ? ClearRightCont() : null;
+    } catch (error) {
+        console.log(error);
+    }
+
     Load();
 }
 
@@ -79,14 +84,14 @@ async function UploadImage(ev){
     }
 }
 
-async function AddItem() {
+async function AddObj() {
 
     let obj = {
         title: "title",
         imgurl: "",
         texts: ""
     }
-    await SetCol(obj);
+    await SetObj(obj);
     Load();
 }
 
@@ -118,7 +123,7 @@ function CreateAddBtn(){
 
     addElement.classList.add("contAdd");
     addBtn.classList.add("fa", "fa-plus", "contAddBtn");
-    addBtn.setAttribute("onclick", "AddItem()");
+    addBtn.setAttribute("onclick", "AddObj()");
 
     addElement.appendChild(addBtn);
     leftcontainer.appendChild(addElement);
@@ -136,19 +141,15 @@ function ClearRightCont(){
     }
 }
 
-let saveTextTimeout;
-function SetText(obj){
-    saveTextTimeout = setTimeout(() => {UpdateText(obj);}, 500);
-}
 
 async function Load() {
     let objs = await GetAllObjs();
 
     ClearLeftCont();
 
-    if(objs.cols!==null){
-        for(const col in objs.cols){
-            CreateListItem(objs.cols[col]);
+    if(objs.items!==null){
+        for(const item in objs.items){
+            CreateListItem(objs.items[item]);
         }
     }
     CreateAddBtn();
@@ -234,6 +235,11 @@ async function RefreshImgSpace(id){
     expandedObjImg.firstChild ? expandedObjImg.removeChild(expandedObjImg.firstChild) : null;
     obj.imgurl != "" ? img.setAttribute("src", "http://localhost:3000/" + obj.imgurl) : null;
     expandedObjImg.appendChild(img);
+}
+
+let saveTextTimeout;
+function SetText(obj){
+    saveTextTimeout = setTimeout(() => {UpdateText(obj);}, 500);
 }
 
 window.addEventListener('keypress', () => {

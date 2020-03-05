@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ColSchema = mongoose.Schema({
+const listItemSchema = mongoose.Schema({
     title: String,
     imgurl: String,
     texts: String
@@ -8,4 +8,5 @@ const ColSchema = mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('Cols', ColSchema);
+module.exports = mongoose.model('ListItems', listItemSchema);
+

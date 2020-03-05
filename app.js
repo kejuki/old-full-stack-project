@@ -1,3 +1,4 @@
+
 const   express = require('express'),
         mongoose = require('mongoose'),
         app = express(),
@@ -5,22 +6,22 @@ const   express = require('express'),
         port = 3000;
 
 //import routes
-const colRoute = require('./routes/cols');
+const listItemRoute = require('./routes/listItems');
 
 //connect to db
+
 mongoose.connect(url,{ 
     useNewUrlParser: true,
     useUnifiedTopology: true
-    },
-    () => {
-        console.log("connected to db");
     }
 );
 
 //middleware
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/cols', colRoute);
+app.use('/listItems', listItemRoute);
 app.use('/site', express.static('site'));
+
 
 app.listen(port);

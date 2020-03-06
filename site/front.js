@@ -101,7 +101,7 @@ function CreateListItem(obj) {
     delListItemBtn = document.createElement("Button"),
     expandBtn = document.createElement("Button");
   
-    listItem.classList.add("col");
+    listItem.classList.add("item", "listItem");
     listItemHeader.classList.add("colHeader");
     delListItemBtn.classList.add("delColBtn", "fa", "fa-trash-o");
     expandBtn.classList.add("expandBtn");
@@ -122,7 +122,7 @@ function CreateAddBtn(){
     addBtn = document.createElement("Button");
 
     addElement.classList.add("contAdd");
-    addBtn.classList.add("fa", "fa-plus", "contAddBtn");
+    addBtn.classList.add("fa", "fa-plus", "contAddBtn", "listItem");
     addBtn.setAttribute("onclick", "AddObj()");
 
     addElement.appendChild(addBtn);
@@ -187,12 +187,13 @@ function CreateExpandableObj(obj){
     selectImgBtn.setAttribute("name", "img");
     selectImgBtn.setAttribute("type", "file");
     selectImgBtn.setAttribute("accept", "image/*");
-    selectImgBtn.classList.add("formBtn");
+    selectImgBtn.classList.add("selectBtn");
     selectImgBtn.id = "selectImg";
 
     submitImgBtn.setAttribute("type", "submit");
     submitImgBtn.addEventListener("click", UploadImage);
-    submitImgBtn.classList.add("formBtn");
+    submitImgBtn.classList.add("submitBtn");
+    submitImgBtn.innerHTML = "Submit";
 
     addImgForm.appendChild(idelem);
     addImgForm.appendChild(selectImgBtn);
@@ -214,10 +215,11 @@ function CreateExpandableObj(obj){
 }
 
 function ResizeTextarea() {
-    let tae = document.getElementsByClassName("expandedObjtextarea");
+    const tae = document.getElementsByClassName("expandedObjtextarea");
     let ta = Array.from(tae);
+
     ta.forEach((ta) => {
-      ta.style.height = ta.scrollHeight + "px";
+      ta.style.minHeight = ta.scrollHeight + "px";
     })
 }
 

@@ -96,10 +96,7 @@ button:active{border: 0;}
     width: 50px;
     height: 50px;
 }
-.expandedObjTitle,
-.expandedObjImg,
-.expandedObjtextarea,
-#imgForm{
+.rcItem{
     margin: 20px auto 0 auto;
     display: block;
     border: 0;
@@ -107,6 +104,7 @@ button:active{border: 0;}
     color:inherit;
     min-height: 28px;
     max-width: 720px;
+
 }
 .expandedObjTitle{
     min-width: 480px;
@@ -118,11 +116,9 @@ button:active{border: 0;}
     background-color: rgb(24, 24, 24);
 
 }
-.expandedObjImg{
-    object-fit: contain;
-}
+
 img{
-    max-width: inherit;
+    min-height: max-content!important;
 }
 .expandedObjtextarea{
     min-width: inherit;

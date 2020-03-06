@@ -158,7 +158,6 @@ async function Load() {
 function CreateExpandableObj(obj){
     const expandObjTitle = document.createElement("textarea"),
     textarea = document.createElement("textarea"),
-    imgspace = document.createElement("div"),
     img = document.createElement("img"),
     addImgForm = document.createElement("form"),
     idelem = document.createElement("input"),
@@ -168,17 +167,18 @@ function CreateExpandableObj(obj){
 
     //creating the title area
     expandObjTitle.value = obj.title;
-    expandObjTitle.classList.add("expandedObjTitle");
+    expandObjTitle.classList.add("expandedObjTitle", "rcItem");
     expandObjTitle.setAttribute("oninput","SetText({content: {title: value}, type: 'title', id: '"+obj._id+"'});");
 
     //loading the image
     img.id = "imgelement";
-    imgspace.classList.add("expandedObjImg");
+    img.classList.add("rcItem");
     obj.imgurl != "" ? img.setAttribute("src", "http://localhost:3000/" + obj.imgurl) : null;
-    imgspace.appendChild(img);
+
 
     //creating the image upload form
     addImgForm.id = "imgForm";
+    addImgForm.classList.add("rcItem");
 
     idelem.setAttribute("type", "hidden");
     idelem.id = "idelem";
@@ -200,7 +200,7 @@ function CreateExpandableObj(obj){
     addImgForm.appendChild(submitImgBtn);
     
     //creating the textarea
-    textarea.classList.add("expandedObjtextarea");
+    textarea.classList.add("expandedObjtextarea", "rcItem");
     textarea.value = obj.texts;
     textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'});" 
         +'this.style.height = "";' 
@@ -208,7 +208,7 @@ function CreateExpandableObj(obj){
     
     //appending elements to the container
     rightcontainer.appendChild(expandObjTitle);
-    rightcontainer.appendChild(imgspace);
+    rightcontainer.appendChild(img);
     rightcontainer.appendChild(addImgForm);
     rightcontainer.appendChild(textarea);
 

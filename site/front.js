@@ -102,8 +102,8 @@ function CreateListItem(obj) {
     expandBtn = document.createElement("Button");
   
     listItem.classList.add("item", "listItem");
-    listItemHeader.classList.add("colHeader");
-    delListItemBtn.classList.add("delColBtn", "fa", "fa-trash-o");
+    listItemHeader.classList.add("itemHeader");
+    delListItemBtn.classList.add("delItemBtn", "fa", "fa-trash-o");
     expandBtn.classList.add("expandBtn");
 
     listItemHeader.innerHTML = obj.title;
@@ -167,7 +167,7 @@ function CreateExpandableObj(obj){
 
     //creating the title area
     expandObjTitle.value = obj.title;
-    expandObjTitle.classList.add("expandedObjTitle", "rcItem");
+    expandObjTitle.classList.add("expandedItemTitle", "rcItem");
     expandObjTitle.setAttribute("oninput","SetText({content: {title: value}, type: 'title', id: '"+obj._id+"'});");
 
     //loading the image
@@ -200,7 +200,7 @@ function CreateExpandableObj(obj){
     addImgForm.appendChild(submitImgBtn);
     
     //creating the textarea
-    textarea.classList.add("expandedObjtextarea", "rcItem");
+    textarea.classList.add("expandedItemtextarea", "rcItem");
     textarea.value = obj.texts;
     textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'}); ResizeTextarea();" 
         +'this.style.minHeight = "";' 
@@ -215,7 +215,7 @@ function CreateExpandableObj(obj){
 }
 
 function ResizeTextarea() {
-    const tae = document.getElementsByClassName("expandedObjtextarea");
+    const tae = document.getElementsByClassName("expandedItemtextarea");
     let ta = Array.from(tae);
 
     ta.forEach((ta) => {

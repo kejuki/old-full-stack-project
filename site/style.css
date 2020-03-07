@@ -16,7 +16,16 @@ body{
     top: 0;
     left:0;
 }
-
+#left-container{
+    position: fixed;
+    top:38px;
+    bottom: 0;
+    width: 320px;
+    overflow-y: auto;
+    border-right:2px solid rgb(255, 75, 0);
+    display: flex;
+    flex-direction: column;
+}
 #right-container{
     margin: 0 auto 0 auto;
     overflow-y: auto;
@@ -30,29 +39,22 @@ body{
     height: 100%;
     width: calc(100% - 322px);
 }
+
+
 ::-webkit-scrollbar {
     width: 10px;
 }
 ::-webkit-scrollbar-track {
-background: rgb(24, 24, 24);
+    background: rgb(24, 24, 24);
 }
 ::-webkit-scrollbar-thumb:hover {
     background: rgb(255, 75, 0) ; 
 }
 ::-webkit-scrollbar-thumb {
     background: rgba(200, 75, 0, 0.5) ; 
-  }
-#left-container{
-    position: fixed;
-    top:38px;
-    bottom: 0;
-    width: 320px;
-    overflow-y: auto;
-  
-    border-right:2px solid rgb(255, 75, 0);
-    display: flex;
-    flex-direction: column;
 }
+
+
 .item{
     float: left;
     min-width: 100%;
@@ -66,7 +68,7 @@ background: rgb(24, 24, 24);
     border-bottom: 1px solid rgba(255, 75, 0, 1);
     border-top: 1px solid rgba(255, 75, 0, 1);
 }
-.colHeader{
+.itemHeader{
     float: left;
     padding-left: 10px;
     max-width: 270px;
@@ -82,7 +84,7 @@ button{
 button:hover {opacity: 1;}
 button:active{border: 0;}
 
-.delColBtn{
+.delItemBtn{
     position: relative;
     border: 0;
     color:rgb(255, 75, 0);
@@ -120,7 +122,7 @@ button:active{border: 0;}
     max-width: 720px;
 
 }
-.expandedObjTitle{
+.expandedItemTitle{
     min-width: 480px;
     height: 25px;
     word-break: break-all;
@@ -132,9 +134,10 @@ button:active{border: 0;}
 }
 
 img{
-    min-height: max-content!important;
+    flex-shrink: 0;
+    max-height: 800px!important;
 }
-.expandedObjtextarea{
+.expandedItemtextarea{
     min-width: inherit;
     min-height: 48px;
     word-break: break-all;

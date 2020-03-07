@@ -16,6 +16,7 @@ body{
     top: 0;
     left:0;
 }
+
 #right-container{
     margin: 0 auto 0 auto;
     overflow-y: auto;
@@ -26,8 +27,21 @@ body{
     left:322px;
     bottom: 0;
     position: fixed;
-
+    height: 100%;
+    width: calc(100% - 322px);
 }
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+background: rgb(24, 24, 24);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(255, 75, 0) ; 
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(200, 75, 0, 0.5) ; 
+  }
 #left-container{
     position: fixed;
     top:38px;
@@ -79,7 +93,7 @@ button:active{border: 0;}
 .expandBtn{
     bottom: 50px;
     height: 50px;
-    width: 288px;
+    width: 280px;
     z-index: 9999;
     border: 1px;
     position: relative;
@@ -127,6 +141,7 @@ img{
     resize:none;
     overflow: hidden;
     background-color: rgb(24, 24, 24);
+    margin-bottom: 100px;
 }
 .selectBtn::-webkit-file-upload-button{
     visibility: hidden;

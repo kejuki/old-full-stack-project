@@ -202,9 +202,9 @@ function CreateExpandableObj(obj){
     //creating the textarea
     textarea.classList.add("expandedObjtextarea", "rcItem");
     textarea.value = obj.texts;
-    textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'});" 
-        +'this.style.height = "";' 
-        +'this.style.height = this.scrollHeight + "px"');
+    textarea.setAttribute("oninput","SetText({content: {texts: value}, type: 'texts', id: '"+obj._id+"'}); ResizeTextarea();" 
+        +'this.style.minHeight = "";' 
+        +'this.style.minHeight = this.scrollHeight + "px"');
     
     //appending elements to the container
     rightcontainer.appendChild(expandObjTitle);
@@ -232,11 +232,9 @@ async function ExpandItem(id){
 
 async function RefreshImgSpace(id){
     const obj = await GetOne(id);
-    const img = document.createElement("img");
-    expandedObjImg = document.getElementsByClassName("expandedObjImg")[0];
-    expandedObjImg.firstChild ? expandedObjImg.removeChild(expandedObjImg.firstChild) : null;
+    const img = document.getElementById("imgelement");
+    
     obj.imgurl != "" ? img.setAttribute("src", "http://localhost:3000/" + obj.imgurl) : null;
-    expandedObjImg.appendChild(img);
 }
 
 let saveTextTimeout;

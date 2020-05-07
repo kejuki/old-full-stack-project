@@ -2,7 +2,7 @@
 const   express = require('express'),
         mongoose = require('mongoose'),
         app = express(),
-        url = 'mongodb://127.0.0.1:27017/tod',
+        url = 'mongodb://127.0.0.1:27017/db',
         port = 3000;
 
 //import routes

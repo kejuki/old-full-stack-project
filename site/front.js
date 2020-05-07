@@ -91,6 +91,7 @@ async function AddObj() {
         imgurl: "",
         texts: ""
     }
+
     await SetObj(obj);
     Load();
 }
@@ -152,6 +153,7 @@ async function Load() {
             CreateListItem(objs.items[item]);
         }
     }
+    
     CreateAddBtn();
 }
 
